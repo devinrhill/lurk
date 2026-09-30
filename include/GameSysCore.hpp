@@ -7,6 +7,9 @@
 #include "PhysicsCtx.hpp"
 #include "ShaderCtx.hpp"
 #include "WindowCtx.hpp"
+#include "MultipassOverlay.hpp"
+
+using namespace util;
 
 struct GameSysCore {
 	struct WindowCtx wctx;
@@ -14,6 +17,10 @@ struct GameSysCore {
 	Camera2D camera2d;
 	struct ShaderCtx shctx;
 	struct PhysicsCtx pctx;
+	MultipassOverlay mpass;
+	Color bgColor;
+	int argc;
+	char** argv;
 
 #ifndef __cplusplus
 	int shouldRun;
@@ -35,11 +42,14 @@ struct GameSysCore {
 		g__one = 1;
 		shctx.init();
 		pctx.init();
+		bgColor = BLACK;
+		mpass.init(wctx);
 	}
 
 	void close() {
 		shctx.close();
 		pctx.close();
+		mpass.close();
 	}
 
 	void update() {

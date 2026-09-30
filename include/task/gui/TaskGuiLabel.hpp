@@ -2,7 +2,6 @@
 #define TASKLABEL_HPP
 
 #include <raylib.h>
-#include "../../Debug.hpp"
 #include "TaskGui.hpp"
 
 struct TaskGuiLabel: TaskGui {
@@ -31,9 +30,7 @@ struct TaskGuiLabel: TaskGui {
         }
         DrawText(text, trans.x + padding.x/2, trans.y + padding.y/1.5, fontSize, fontColor);
         
-#if !DEBUG_NDEBUG
-        DrawRectangleLines(trans.x, trans.y, scale.x, scale.y, WHITE);
-#endif
+        //DrawRectangleLines(trans.x, trans.y, scale.x, scale.y, WHITE);
     }
 };
 

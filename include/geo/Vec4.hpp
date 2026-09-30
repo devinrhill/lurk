@@ -18,6 +18,8 @@ public:
 
 	~Vec4() {}
 
+	Vec4(float x): x{x}, y{x}, z{x}, w{x} {}
+
 	Vec4(float x, float y, float z, float w) : x{x}, y{y}, z{z}, w{w} {}
 
 	Vec4(Vector4 v): x{v.x}, y{v.y}, z{v.z}, w{v.w} {}

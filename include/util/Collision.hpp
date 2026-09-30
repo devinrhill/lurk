@@ -6,6 +6,8 @@
 #include <stddef.h>
 #include "Geometry.hpp"
 
+namespace util {
+
 struct SphereTriangleCollision {
 	Vector3 difference;
 	bool hit;
@@ -892,4 +894,6 @@ Vector3 getOverlapAABB(BoundingBox testBox, BoundingBox worldBox) {
 		fminf(testBox.max.z, worldBox.max.z) -
 		fmaxf(testBox.min.z, worldBox.min.z)
 	};
+}
+
 }

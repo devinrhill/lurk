@@ -40,9 +40,14 @@ public:
 		POST = 2
 	};
 
+	static constexpr uint PRIO_DEFAULT = 0x80000000;
+
+	uint status = 0;
+	uint drawPriority = PRIO_DEFAULT;
+	bool autoFree = false;
+
 	uint flags;
 	uint drawFlags[3];
-	bool autoFree;
 
 	Task(): Node() {
 		setName("Task");
@@ -68,6 +73,15 @@ public:
 
 	virtual void postDraw(int status, Task* param) {}
 
+	void pause(int flags) {
+		this->flags &= ~(flags);
+	}
+
+	void resume(int flags) {
+		this->flags |= flags;
+	}
+
+	/* old
 	static void preUpdateAll(Task *root, Task* param = nullptr, bool freeFlag = true) {
 		Task *task3;
 		Task *task2 = task3 = root;
@@ -85,7 +99,26 @@ public:
 	    	task3 = (Task *)task3->next(root);
 		}
 	}
+	*/
 
+	static void preUpdateAll(Task* root, Task* param = nullptr, bool freeFlag = true) {
+		Task* task3;
+		Task* task2 = (task3 = root);
+		while(task3 != nullptr) {
+			if((!(task3->flags & EXTERNAL) && task3->flags & PRE_UPDATE) || task3->flags & FORCE) {
+				if(!task3->preUpdate(param) && freeFlag) {
+					task3->close();
+					task3 = ((task3 == root) ? nullptr : ((Task*)task2->next(root)));
+					continue;
+				}
+			}
+			
+			task2 = task3;
+			task3 = (Task*)task3->next(root);
+		}
+	}
+
+	/* old
 	static void updateAll(Task *root, Task* param = nullptr, bool freeFlag = true) {
 		Task *task3;
 		Task *task2 = task3 = root;
@@ -102,7 +135,26 @@ public:
 			task3 = (Task *)task3->next(root);
 		}
 	}
+	*/
 
+	static void updateAll(Task* root, Task* param = nullptr, bool freeFlag = true) {
+		Task* task3;
+		Task* task2 = (task3 = root);
+		while(task3 != nullptr) {
+			if((!(task3->flags & EXTERNAL) && task3->flags & UPDATE) || task3->flags & FORCE) {
+				if(!task3->update(param) && freeFlag) {
+					task3->close();
+					task3 = ((task3 == root) ? nullptr : ((Task*)task2->next(root)));
+					continue;
+				}
+			}
+			
+			task2 = task3;
+			task3 = (Task*)task3->next(root);
+		}
+	}
+
+	/* old
 	static void postUpdateAll(Task *root, Task* param = nullptr, bool freeFlag = true) {
 		Task *task3;
 		Task *task2 = task3 = root;
@@ -120,14 +172,32 @@ public:
 			task3 = (Task *)task3->next(root);
 		}
 	}
+	*/
+
+	static void postUpdateAll(Task* root, Task* param = nullptr, bool freeFlag = true) {
+		Task* task3;
+		Task* task2 = (task3 = root);
+		while(task3 != nullptr) {
+			if((!(task3->flags & EXTERNAL) && task3->flags & POST_UPDATE) || task3->flags & FORCE) {
+				if(!task3->postUpdate(param) && freeFlag) {
+					task3->close();
+					task3 = ((task3 == root) ? nullptr : ((Task*)task2->next(root)));
+					continue;
+				}
+			}
+			
+			task2 = task3;
+			task3 = (Task*)task3->next(root);
+		}
+	}
 
 	static void preDrawAll(Task *root, int status, Task* param, int drawHint) {
 		Task *task3;
 		Task *task2 = task3 = root;
 		while (task3 != nullptr) {
 			if(!(task3->flags & EXTERNAL)) {
-				if ((task3->flags & PRE_DRAW &&
-					task3->drawFlags[0] & drawHint ||
+				if (((task3->flags & PRE_DRAW &&
+					task3->drawFlags[0] & drawHint) ||
 					task3->flags & FORCE)) {
 					task3->preDraw(status, param);
 				}
@@ -143,8 +213,8 @@ public:
 		Task *task2 = task3 = root;
 		while (task3 != nullptr) {
 			if(!(task3->flags & EXTERNAL)) {
-				if ((task3->flags & DRAW &&
-					task3->drawFlags[1] & drawHint ||
+				if (((task3->flags & DRAW &&
+					task3->drawFlags[1] & drawHint) ||
 					task3->flags & FORCE)) {
 					task3->draw(status, param);
 				}
@@ -160,8 +230,8 @@ public:
 		Task *task2 = task3 = root;
 		while (task3 != nullptr) {
 			if(!(task3->flags & EXTERNAL)) {
-				if ((task3->flags & POST_DRAW &&
-					task3->drawFlags[2] & drawHint ||
+				if (((task3->flags & POST_DRAW &&
+					task3->drawFlags[2] & drawHint) ||
 					task3->flags & FORCE)) {
 					task3->postDraw(status, param);
 				}

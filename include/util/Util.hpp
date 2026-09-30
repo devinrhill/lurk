@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+namespace util {
+
 inline int g__zero;
 inline int g__one;
 #define TMPS_CAPACITY 0x20
@@ -54,4 +56,6 @@ void* zrealloc(void* ptr, size_t size) {
 	memset(ptr, 0, size);
 
 	return ptr;
+}
+
 }

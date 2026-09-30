@@ -165,8 +165,8 @@ public:
 
 	Rectangle raylib() const {
 		return (Rectangle){
-			min.x,
-			min.y,
+			min.x + halfSize().x,
+			min.y + halfSize().y,
 			max.x - min.x,
 			max.y - min.y
 		};
@@ -178,6 +178,11 @@ public:
 
 		max.x = rect.x + rect.width;
 		max.y = rect.y + rect.height;
+	}
+
+	void draw(Color color, float lineThick = 1.0f) {
+		DrawRectangleLinesEx(raylib(), lineThick, color);
+		DrawLineEx((min+halfSize()).raylib(), (max+halfSize()).raylib(), lineThick, color);
 	}
 
 	// string

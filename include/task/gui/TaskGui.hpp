@@ -4,6 +4,8 @@
 #include "../../util/Gui.hpp"
 #include "../Task.hpp"
 
+using namespace util;
+
 class TaskGui: public Task {
 public:
     enum State {
@@ -71,7 +73,7 @@ public:
     Color fontColor;
 
     TaskGui() {
-        flags = PRE_UPDATE | UPDATE | POST_DRAW | DRAW_POST_2D;
+        flags |= PRE_UPDATE | UPDATE;
         state = 0;
         lastState = 0;
         persist = REGULAR;

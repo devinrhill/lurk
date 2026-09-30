@@ -7,6 +7,7 @@
 #include <GL/gl.h>
 #include "../util/Math.hpp"
 #include "../GameSysCore.hpp"
+#include "../util/Raylib.hpp"
 
 struct Ptc3D {
 	enum Flags {
@@ -88,9 +89,7 @@ struct Ptc3D {
 
 	void draw() {
 		if(isAlive()) {
-			if(genConfig->isColorLerp) {
-				color = ColorLerp(genConfig->initColor, genConfig->finalColor, elapsedNorm);
-			}
+			color = util::curveColor(genConfig->colorCurve, genConfig->initColor, genConfig->finalColor, elapsedNorm);
 
 			if(flags & PT_DRAW_CUBE) {
 				DrawCubeV(pos, scale, color);

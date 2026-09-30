@@ -8,13 +8,15 @@
 #include "Task.hpp"
 
 struct TaskPtc3D: public Task {
-	static constexpr uint VERSION = 1;
+	// 1
+	static constexpr uint VERSION = 2;
 
 	std::vector<Ptc3DEmi*> emitters;
 
 	TaskPtc3D() {
 		setName("TaskPtc3D");
-		flags = UPDATE | DRAW | DRAW_3D;
+		flags |= UPDATE | DRAW;
+		drawFlags[MAIN] |= DRAW_3D;
 	}
 
 	bool update(Task* param) override {
@@ -29,6 +31,14 @@ struct TaskPtc3D: public Task {
 		for(Ptc3DEmi* e: emitters) {
 			e->draw();
 		}
+	}
+
+	static TaskPtc3D create(const char* filename) {
+		TaskPtc3D ptc;
+
+		ptc.loadFile(filename);
+
+		return ptc;
 	}
 
 	void loadFile(const char* filename) {
@@ -164,7 +174,7 @@ struct TaskPtc3D: public Task {
 				gen->config.randRotationRange.x = br.readInt<float>().valueOr();
 				gen->config.randRotationRange.y = br.readInt<float>().valueOr();
 
-				gen->config.isColorLerp = br.readInt<uint>().valueOr();
+				gen->config.colorCurve = br.readInt<uint>().valueOr();
 
 				gen->config.initColor.r = br.readInt<uchar>().valueOr();
 				gen->config.initColor.g = br.readInt<uchar>().valueOr();

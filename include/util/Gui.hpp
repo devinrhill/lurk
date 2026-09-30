@@ -3,6 +3,8 @@
 #include <raylib.h>
 #include "Raylib.hpp"
 
+namespace util {
+
 bool isGuiBoxPressedLeft(Vector2 origin, Vector2 size) {
     return IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && isAABB2D(aabb2D(origin, size), GetMousePosition());
 }
@@ -37,4 +39,6 @@ bool isGuiBoxUpLeft(Vector2 origin, Vector2 size) {
 
 bool isGuiBoxUpRight(Vector2 origin, Vector2 size) {
     return IsMouseButtonUp(MOUSE_RIGHT_BUTTON) && isAABB2D(aabb2D(origin, size), GetMousePosition());
+}
+
 }

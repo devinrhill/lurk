@@ -3,6 +3,8 @@
 #include <raylib.h>
 #include <raymath.h>
 
+namespace util {
+
 struct AABB2D {
     Vector2 center;
     Vector2 halfSize;
@@ -60,4 +62,6 @@ void drawRightTriangle(struct RightTriangle rt, Vector2 origin, float scale, Col
 	DrawLine(origin.x, origin.y, origin.x, origin.y + scale*rt.height*q.y, color);
 	DrawLine(origin.x, origin.y + scale*rt.height*q.y, origin.x + scale*rt.base*q.x, origin.y, color);
 	DrawRectangleLines(origin.x-1, origin.y-1, 6*scale*q.x, 6*scale*q.y, color);
+}
+
 }

@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+namespace util {
+
 float stepSmooth1(float t) {
 	return t * t * (3.0f - 2.0f * t);
 }
@@ -36,4 +38,6 @@ float fhermite(float p0, float m0, float p1, float m1, float t) {
 	float h11 =        t3 -      t2;
 
 	return h00*p0 + h10*m0 + h01*p1 + h11*m1;
+}
+
 }

@@ -3,7 +3,6 @@
 
 #include <raylib.h>
 #include <raymath.h>
-#include "../../Debug.hpp"
 #include "../Task.hpp"
 #include "TaskGui.hpp"
 
@@ -19,6 +18,8 @@ struct TaskGuiWindow: public TaskGui {
 
     TaskGuiWindow(): TaskGui() {
         setName("TaskGuiWindow");
+        flags |= UPDATE | PRE_UPDATE | POST_DRAW;
+        drawFlags[POST] = DRAW_POST_2D;
 
         persist |= CAN_MOVE | CAN_RESIZE;
         title = "";
@@ -254,9 +255,7 @@ struct TaskGuiWindow: public TaskGui {
         if(drawWindowTitle) {
             // window title
             DrawText(title, trans.x + scale.x - padding.x - MeasureText(title, fontSize), trans.y + padding.y, fontSize, WHITE);
-#if !NDEBUG
-            DrawRectangleLines(trans.x, trans.y, scale.x, fontSize + padding.y, WHITE);
-#endif
+            //DrawRectangleLines(trans.x, trans.y, scale.x, fontSize + padding.y, WHITE);
         }
     }
 };

@@ -7,6 +7,10 @@
 #include "Geometry.hpp"
 #include "Math.hpp"
 #include "Raylib.hpp"
+#include "../GameSysCore.hpp"
+#include "Curve.hpp"
+
+namespace util {
 
 struct IVector2 {
 	int x;
@@ -340,6 +344,10 @@ void drawGrid2D(int x, int y, int width, int height, int spacing, int drawAxes, 
 	}
 }
 
+void drawGrid2DCenter(int x, int y, int width, int height, int spacing, int drawAxes, Color color) {
+	drawGrid2D(x - (width*spacing)/2, y - (height*spacing)/2, width, height, spacing, drawAxes, color);
+}
+
 int isVec2Normalized(Vector2 v) {
 	return feqel(v.x*v.x + v.y*v.y, 1.0f);
 }
@@ -457,5 +465,18 @@ void camera3DRotatePitch(Camera3D* camera, float amount)
 }
 
 void drawGraph(Vector3 origin) {
+
+}
+
+Color curveColor(int type, Color start, Color end, float rate) {
+	Color out = BLACK;
+
+	out.r = (int)(255.0f * curve(type, start.r / 255.0f, end.r / 255.0f, rate));
+	out.g = (int)(255.0f * curve(type, start.g / 255.0f, end.g / 255.0f, rate));
+	out.b = (int)(255.0f * curve(type, start.b / 255.0f, end.b / 255.0f, rate));
+	out.a = (int)(255.0f * curve(type, start.a / 255.0f, end.a / 255.0f, rate));
+
+	return out;
+}
 
 }

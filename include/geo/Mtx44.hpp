@@ -46,6 +46,25 @@ public:
 		m[15] = m15;
 	}
 
+	Mtx44(Matrix other) {
+		m[0] = other.m0;
+		m[1] = other.m1;
+		m[2] = other.m2;
+		m[3] = other.m3;
+		m[4] = other.m4;
+		m[5] = other.m5;
+		m[6] = other.m6;
+		m[7] = other.m7;
+		m[8] = other.m8;
+		m[9] = other.m9;
+		m[10] = other.m10;
+		m[11] = other.m11;
+		m[12] = other.m12;
+		m[13] = other.m13;
+		m[14] = other.m14;
+		m[15] = other.m15;
+	}
+
 	// indexing
 	//
 	// row/column indexing while internally using

@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+namespace util {
+
 double min(double x, double y) {
 	if(x < y) {
 		return x;
@@ -128,4 +130,6 @@ int deqel(double x, double y) {
 
 int deqeh(double x, double y) {
 	return deqe(x, y, 0.000001);
+}
+
 }

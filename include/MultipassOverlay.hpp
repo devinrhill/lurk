@@ -5,11 +5,16 @@
 #include <raylib.h>
 #include <cstdlib>
 #include "util/Util.hpp"
-#include "GameSysCore.hpp"
+#include "WindowCtx.hpp"
+#include "geo/Vec2.hpp"
+
+using namespace geo;
 
 struct MultipassOverlay {
 	int shaderCount;
 	Shader** shaders;
+	bool isOwning;
+	Vec2 screenSize;
 
 	RenderTexture2D rt[2];
 	int rtUsing;
@@ -18,18 +23,29 @@ struct MultipassOverlay {
 		shaderCount = 0;
 		shaders = nullptr;
 		rtUsing = 0;
+		isOwning = false;
+		screenSize = Vec2(0);
 	}
 
-	void init() {
-		shaders = (Shader**)zalloc(sizeof(Shader*) * MULTIPASS_OVERLAY_CAPACITY);
-		rt[0] = LoadRenderTexture(GameCore.wctx.width, GameCore.wctx.height);
-		rt[1] = LoadRenderTexture(GameCore.wctx.width, GameCore.wctx.height);
+	void init(WindowCtx wctx) {
+		shaders = new Shader*[MULTIPASS_OVERLAY_CAPACITY];
+		for(uint i = 0; i < shaderCount; i++) {
+			shaders[i] = nullptr;
+		}
+		this->screenSize = Vec2(wctx.width, wctx.height);
+		rt[0] = LoadRenderTexture(screenSize.x, screenSize.y);
+		rt[1] = LoadRenderTexture(screenSize.x, screenSize.y);
 	}
 
 	void close() {
 		UnloadRenderTexture(rt[0]);
 		UnloadRenderTexture(rt[1]);
-		free(shaders);
+		if(isOwning) {
+			for(uint i = 0; i < shaderCount; i++) {
+				delete shaders[i];
+			}
+		}
+		delete[] shaders;
 	}
 
 	void push(Shader* shader) {

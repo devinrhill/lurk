@@ -5,6 +5,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
+#include "../util/Curve.hpp"
 
 struct Ptc3DGenConfig {
 	enum Flags {
@@ -56,7 +57,7 @@ struct Ptc3DGenConfig {
 	bool isRandRotation;
 	Vector2 randRotationRange;
 
-	bool isColorLerp;
+	int colorCurve;
 	Color initColor;
 	Color finalColor;
 
@@ -90,7 +91,7 @@ struct Ptc3DGenConfig {
 		randOriginRange = Vector2Zero();
 		isRandRotation = false;
 		randRotationRange = Vector2Zero();
-		isColorLerp = false;
+		colorCurve = util::C_CONSTANT;
 		initColor = WHITE;
 		finalColor = WHITE;
 		std::memset(texPath, 0, 0x100);
@@ -160,8 +161,10 @@ struct Ptc3DGenConfig {
 		printf("randPosRange   = (%f, %f)\n",
     		randPosRange.x, randPosRange.y);
 
+		/*
 		printf("isColorLerp    = %s\n",
     		isColorLerp ? "true" : "false");
+    	*/
 
 		printf("initColor      = (%d, %d, %d, %d)\n",
     		initColor.r, initColor.g, initColor.b, initColor.a);

@@ -28,24 +28,25 @@ struct TexSrtAnimKeyframe {
 	Vector2 translation;
 	Vector2 shear;
 
-	struct TexSrtAnimKeyframe* next;
+	TexSrtAnimKeyframe* next;
 
-	TexSrtAnimKeyframe() {
+	void init() {
 		time = 0.0f;
 		scale = Vector2One();
 		rotationAngle = 0.0f;
 		translation = Vector2Zero();
-		next = NULL;
+		shear = Vector2Zero();
+		next = nullptr;
 	}
 };
 
 struct TexSrtAnim {
 	int keyframeCount;
-	struct TexSrtAnimKeyframe* keyframes;
+	TexSrtAnimKeyframe* keyframes;
 
 	float elapsedTime;
-	float fps;
-	struct TexSrtAnimKeyframe* currentFrame;
+	float playbackSpeed;
+	TexSrtAnimKeyframe* currentFrame;
 	int currentFrameIndex;
 
 	// interpolation state
@@ -60,11 +61,14 @@ struct TexSrtAnim {
 	int translationLoc;
 	int shearLoc;
 
-	TexSrtAnim() {
+	void init() {
 		keyframeCount = 0;
-		keyframes = (TexSrtAnimKeyframe*)zalloc(sizeof(struct TexSrtAnimKeyframe) * TEX_SRT_ANIM_CAPACITY);
+		keyframes = new TexSrtAnimKeyframe[TEX_SRT_ANIM_CAPACITY];
+		for(int i = 0; i < TEX_SRT_ANIM_CAPACITY; i++) {
+			keyframes[i].init();
+		}
 		elapsedTime = 0.0f;
-		fps = 60.0f;
+		playbackSpeed = 1.0f;
 		currentFrame = &keyframes[0];
 		currentFrameIndex = 0;
 
@@ -83,23 +87,18 @@ struct TexSrtAnim {
 		getUniforms();
 	}
 
-	~TexSrtAnim() {
-		if(keyframes) {
-			free(keyframes);
-			keyframes = NULL;
-		}
-		keyframeCount = 0;
-		currentFrame = NULL;
+	void close() {
+		delete[] keyframes;
 	}
 
 	void update() {
-		elapsedTime += GetFrameTime() * fps;
+		elapsedTime += GameCore.dt * playbackSpeed;
 
-		struct TexSrtAnimKeyframe* curr = currentFrame;
-		struct TexSrtAnimKeyframe* next = curr->next;
+		TexSrtAnimKeyframe* curr = currentFrame;
+		TexSrtAnimKeyframe* next = curr->next;
 
 		// last frame
-		if(next == NULL) {
+		if(next == nullptr) {
 			currentFrame = &keyframes[0];
 			currentFrameIndex = 0;
 			elapsedTime = 0.0f;
@@ -161,17 +160,18 @@ struct TexSrtAnim {
 		} else if(endianness == 1) {
 			br.setEndianness(E_LITTLE);
 		} else {
+			printf("bad endiness\n");
 			return;
 		}
 
 		char version;
 		br.read(&version, 1, 1);
 		if(version != 4) {
+			printf("bad version\n");
 			return;
 		}
 
-		unsigned int size;
-		br.read(&size, 4, 1);
+		unsigned int size = br.readInt<uint>().valueOr();
 		if(size != br.getSize()) {
 			fprintf(stderr, "Bad size\n");
 			return;
@@ -179,19 +179,17 @@ struct TexSrtAnim {
 
 		br.seek(2, O_CUR); // skip reserved1
 
-		br.read(&keyframeCount, 4, 1);
+		keyframeCount = br.readInt<uint>().valueOr();
 		if(keyframeCount > TEX_SRT_ANIM_CAPACITY) {
 			fprintf(stderr, "Capacity\n");
 			return;
 		}
 
-		unsigned int metadataOff;
-		unsigned int keyframesOff;
-		br.read(&metadataOff, 4, 1);
-		br.read(&keyframesOff, 4, 1);
+		unsigned int metadataOff = br.readInt<uint>().valueOr();
+		unsigned int keyframesOff = br.readInt<uint>().valueOr();
 		br.seek(0x8, O_CUR); // skip reserved2
 		
-		unsigned char* metadataFlags = (unsigned char*)zalloc(keyframeCount);
+		unsigned char* metadataFlags = new unsigned char[keyframeCount];
 		for(int i = 0; i < keyframeCount; i++) {
 			br.read(&metadataFlags[i], 1, 1);
 		}
@@ -201,23 +199,21 @@ struct TexSrtAnim {
 		}
 
 		for(int i = 0; i < keyframeCount; i++) {
-			std::memset(&keyframes[i], 0, sizeof(TexSrtAnimKeyframe));
-
-			br.read(&keyframes[i].time, 4,1 );
+			keyframes[i].time = br.readInt<float>().valueOr();
 			if(metadataFlags[i] & SRT_HAS_SCALE) {
-				br.read(&keyframes[i].scale.x, 4, 1);
-				br.read(&keyframes[i].scale.y, 4, 1);
+				keyframes[i].scale.x = br.readInt<float>().valueOr();
+				keyframes[i].scale.y = br.readInt<float>().valueOr();
 			}
 			if(metadataFlags[i] & SRT_HAS_ROTATION) {
-				br.read(&keyframes[i].rotationAngle, 4, 1);
+				keyframes[i].rotationAngle = br.readInt<float>().valueOr();
 			}
 			if(metadataFlags[i] & SRT_HAS_TRANSLATION) {
-				br.read(&keyframes[i].translation.x, 4, 1);
-				br.read(&keyframes[i].translation.y, 4, 1);
+				keyframes[i].translation.x = br.readInt<float>().valueOr();
+				keyframes[i].translation.y = br.readInt<float>().valueOr();
 			}
 			if(metadataFlags[i] & SRT_HAS_SHEAR) {
-				br.read(&keyframes[i].shear.x, 4, 1);
-				br.read(&keyframes[i].shear.y, 4, 1);
+				keyframes[i].shear.x = br.readInt<float>().valueOr();
+				keyframes[i].shear.y = br.readInt<float>().valueOr();
 			}
 		}
 
@@ -228,5 +224,14 @@ struct TexSrtAnim {
 		free(metadataFlags);
 
 		return;
+	}
+
+	static TexSrtAnim create(const char* filename) {
+		TexSrtAnim anim;
+
+		anim.init();
+		anim.load(filename);
+
+		return anim;
 	}
 };
