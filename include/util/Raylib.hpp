@@ -6,8 +6,8 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
-#include "../Math.hpp"
-#include "../GameSysCore.hpp"
+#include "../core/Math.hpp"
+#include "../core/GameSysCore.hpp"
 #include "Curve.hpp"
 #include "../geo/OBB.hpp"
 #include "../geo/Vec3.hpp"

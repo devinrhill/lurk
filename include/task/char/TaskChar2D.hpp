@@ -3,8 +3,8 @@
 #pragma once
 
 #include <raylib.h>
-#include "../geo/Vec2.hpp"
-#include "Task.hpp"
+#include "../../geo/Vec2.hpp"
+#include "../core/Task.hpp"
 
 using namespace lvk::geo;
 

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "geo/Vec3.hpp"
+#include "../geo/Vec3.hpp"
 
 using namespace lvk::geo;
 

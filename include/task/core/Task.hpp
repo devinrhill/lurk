@@ -4,7 +4,7 @@
 
 #include <cmath>
 #include <cstdio>
-#include "../Types.hpp"
+#include "../../core/Types.hpp"
 #include "Node.hpp"
 
 namespace lvk {

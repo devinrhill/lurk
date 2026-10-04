@@ -4,7 +4,7 @@
 
 #include <cstring>
 #include <cstdio>
-#include "../Types.hpp"
+#include "../../core/Types.hpp"
 
 namespace lvk {
 

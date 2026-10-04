@@ -1,5 +1,7 @@
 // Devin Hill 2026
 
+// TODO: fix
+
 #pragma once
 
 #include <float.h>
@@ -13,33 +15,33 @@ using namespace lvk::geo;
 namespace lvk::util {
 
 struct SphereTriangleCollision {
-	Vector3 difference;
+	Vec3 difference;
 	bool hit;
-	Vector3 normal;
+	Vec3 normal;
 	float penetration;
 };
 
 struct BoxTriangleCollision {
-    Vector3 normal;
+    Vec3 normal;
     float penetration;
     bool hit;
 };
 
-Vector3 getClosestPointTriangleVec(Vector3 p, Vector3 a, Vector3 b, Vector3 c) {
-    Vector3 ab = Vector3Subtract(b, a);
-    Vector3 ac = Vector3Subtract(c, a);
-    Vector3 ap = Vector3Subtract(p, a);
+Vec3 getClosestPointTriangleVec(Vec3 p, Vec3 a, Vec3 b, Vec3 c) {
+    Vec3 ab = b - a;
+    Vec3 ac = c - a;
+    Vec3 ap = p - a;
 
-    float d1 = Vector3DotProduct(ab, ap);
-    float d2 = Vector3DotProduct(ac, ap);
+    float d1 = ab.dot(ap);
+    float d2 = ac.dot(ap);
 
     // Vertex region A
     if (d1 <= 0.0f && d2 <= 0.0f)
         return a;
 
-    Vector3 bp = Vector3Subtract(p, b);
-    float d3 = Vector3DotProduct(ab, bp);
-    float d4 = Vector3DotProduct(ac, bp);
+    Vec3 bp = p - b;
+    float d3 = ab.dot(bp);
+    float d4 = ac.dot(bp);
 
     // Vertex region B
     if (d3 >= 0.0f && d4 <= d3)
@@ -51,12 +53,12 @@ Vector3 getClosestPointTriangleVec(Vector3 p, Vector3 a, Vector3 b, Vector3 c) {
     if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f)
     {
         float v = d1 / (d1 - d3);
-        return Vector3Add(a, Vector3Scale(ab, v));
+        return a + (ab * v);
     }
 
-    Vector3 cp = Vector3Subtract(p, c);
-    float d5 = Vector3DotProduct(ab, cp);
-    float d6 = Vector3DotProduct(ac, cp);
+    Vec3 cp = p - c;
+    float d5 = ab.dot(cp);
+    float d6 = ac.dot(cp);
 
     // Vertex region C
     if (d6 >= 0.0f && d5 <= d6)
@@ -68,7 +70,7 @@ Vector3 getClosestPointTriangleVec(Vector3 p, Vector3 a, Vector3 b, Vector3 c) {
     if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f)
     {
         float w = d2 / (d2 - d6);
-        return Vector3Add(a, Vector3Scale(ac, w));
+        return a + (ac * w);
     }
 
     float va = d3*d6 - d5*d4;
@@ -78,11 +80,11 @@ Vector3 getClosestPointTriangleVec(Vector3 p, Vector3 a, Vector3 b, Vector3 c) {
         (d4 - d3) >= 0.0f &&
         (d5 - d6) >= 0.0f)
     {
-        Vector3 bc = Vector3Subtract(c, b);
+        Vec3 bc = c - b;
         float w = (d4 - d3) /
                   ((d4 - d3) + (d5 - d6));
 
-        return Vector3Add(b, Vector3Scale(bc, w));
+        return b + (bc * w);
     }
 
     // Face region
@@ -90,58 +92,45 @@ Vector3 getClosestPointTriangleVec(Vector3 p, Vector3 a, Vector3 b, Vector3 c) {
     float v = vb * denom;
     float w = vc * denom;
 
-    return Vector3Add(
-        a,
-        Vector3Add(
-            Vector3Scale(ab, v),
-            Vector3Scale(ac, w)
-        )
-    );
+    return a + (ab * v) + (ac * w);
 }
 
-Vector3 getClosestPointTriangle(Vector3 p, struct Triangle triangle) {
+Vec3 getClosestPointTriangle(Vec3 p, struct Triangle triangle) {
 	return getClosestPointTriangleVec(p, triangle.a, triangle.b, triangle.c);
 }
 
-Vector3 getClosestPointAABB(Vector3 p, BoundingBox box) {
-    return (Vector3){
-        Clamp(p.x, box.min.x, box.max.x),
-        Clamp(p.y, box.min.y, box.max.y),
-        Clamp(p.z, box.min.z, box.max.z)
+Vec3 getClosestPointAABB(Vec3 p, BoundingBox box) {
+    return (Vec3){
+        math::clamp<float>(p.x, box.min.x, box.max.x),
+        math::clamp<float>(p.y, box.min.y, box.max.y),
+        math::clamp<float>(p.z, box.min.z, box.max.z)
     };
 }
 
-Vector3 getClosestPointSegment(Vector3 p, Vector3 a, Vector3 b) {
-    Vector3 ab = Vector3Subtract(b, a);
+Vec3 getClosestPointSegment(Vec3 p, Vec3 a, Vec3 b) {
+    Vec3 ab = b - a;
 
     float abLenSq =
-    Vector3LengthSqr(ab);
+    ab.lengthSqr();
 
     if(abLenSq < 1e-8f)
         return a;
 
-    float t =
-    Vector3DotProduct(
-        Vector3Subtract(p, a),
-                      ab
-    ) / abLenSq;
+    float t = (p - a).dot(ab) / abLenSq;
 
-    t = Clamp(t, 0.0f, 1.0f);
+    t = math::clamp<float>(t, 0.0f, 1.0f);
 
-    return Vector3Add(
-        a,
-        Vector3Scale(ab, t)
-    );
+    return a + (ab * t);
 }
 
-void getClosestPointsSegments(Vector3 p1, Vector3 q1, Vector3 p2, Vector3 q2, Vector3 *c1, Vector3 *c2) {
-    Vector3 d1 = Vector3Subtract(q1, p1);
-    Vector3 d2 = Vector3Subtract(q2, p2);
-    Vector3 r = Vector3Subtract(p1, p2);
+void getClosestPointsSegments(Vec3 p1, Vec3 q1, Vec3 p2, Vec3 q2, Vec3 *c1, Vec3 *c2) {
+    Vec3 d1 = q1 - p1;
+    Vec3 d2 = q2 - p2;
+    Vec3 r = p1 - p2;
 
-    float a = Vector3DotProduct(d1, d1);
-    float e = Vector3DotProduct(d2, d2);
-    float f = Vector3DotProduct(d2, r);
+    float a = d1.dot(d1);
+    float e = d2.dot(d2);
+    float f = d2.dot(r);
 
     float s;
     float t;
@@ -149,24 +138,24 @@ void getClosestPointsSegments(Vector3 p1, Vector3 q1, Vector3 p2, Vector3 q2, Ve
     if(a < 1e-8f)
     {
         s = 0.0f;
-        t = Clamp(f/e, 0.0f, 1.0f);
+        t = math::clamp<float>(f/e, 0.0f, 1.0f);
     }
     else
     {
-        float c = Vector3DotProduct(d1, r);
+        float c = d1.dot(r);
 
         if(e < 1e-8f)
         {
             t = 0.0f;
-            s = Clamp(-c/a, 0.0f, 1.0f);
+            s = math::clamp<float>(-c/a, 0.0f, 1.0f);
         }
         else
         {
-            float b = Vector3DotProduct(d1, d2);
+            float b = d1.dot(d2);
             float denom = a*e - b*b;
 
             if(fabsf(denom) > 1e-8f)
-                s = Clamp((b*f - c*e)/denom, 0.0f, 1.0f);
+                s = math::clamp<float>((b*f - c*e)/denom, 0.0f, 1.0f);
             else
                 s = 0.0f;
 
@@ -175,63 +164,55 @@ void getClosestPointsSegments(Vector3 p1, Vector3 q1, Vector3 p2, Vector3 q2, Ve
             if(t < 0.0f)
             {
                 t = 0.0f;
-                s = Clamp(-c/a, 0.0f, 1.0f);
+                s = math::clamp<float>(-c/a, 0.0f, 1.0f);
             }
             else if(t > 1.0f)
             {
                 t = 1.0f;
-                s = Clamp((b - c)/a, 0.0f, 1.0f);
+                s = math::clamp<float>((b - c)/a, 0.0f, 1.0f);
             }
         }
     }
 
     *c1 =
-    Vector3Add(
-        p1,
-        Vector3Scale(d1, s)
-    );
+        p1 + (d1 * s);
 
     *c2 =
-    Vector3Add(
-        p2,
-        Vector3Scale(d2, t)
-    );
+        p2 + (d2 * t);
 }
 
 // sphere triangle collision
-struct SphereTriangleCollision getCollisionSphereTriangle(Vector3 sphereCenter, float radius, struct Triangle triangle) {
+struct SphereTriangleCollision getCollisionSphereTriangle(Vec3 sphereCenter, float radius, struct Triangle triangle) {
 	struct SphereTriangleCollision stc = (struct SphereTriangleCollision){0};
 
-	Vector3 closest = getClosestPointTriangle(
+	Vec3 closest = getClosestPointTriangle(
 		sphereCenter,
 		triangle
 	);
 
-	stc.difference = Vector3Subtract(
-		sphereCenter,
-		closest
-	);
+	stc.difference =
+		sphereCenter - closest;
 
 	stc.hit =
-		Vector3LengthSqr(stc.difference) <= radius * radius;
+		stc.difference.lengthSqr() <= radius * radius;
 
-	float distSq = Vector3LengthSqr(stc.difference);
+	float distSq = stc.difference.lengthSqr();
 
 	if(distSq > 1e-8f) {
 		float dist = sqrtf(distSq);
 
-		stc.normal = Vector3Scale(
-			stc.difference,
-			1.0f / dist);
+		stc.normal = 
+			stc.difference *
+			1.0f / dist;
 
 		stc.penetration = radius - dist;
 	} else {
-		Vector3 ab = Vector3Subtract(triangle.b, triangle.a);
-		Vector3 ac = Vector3Subtract(triangle.c, triangle.a);
+		Vec3 ab = triangle.b - triangle.a;
+		Vec3 ac = triangle.c - triangle.a;
 
 		stc.normal =
-			Vector3Normalize(
-				Vector3CrossProduct(ab, ac));
+			Vec3Normalize(
+				Vec3CrossProduct(ab, ac));
 
 		stc.penetration = radius;
 	}
@@ -239,23 +220,23 @@ struct SphereTriangleCollision getCollisionSphereTriangle(Vector3 sphereCenter, 
 	return stc;
 }
 
-void resolveCollisionSphereTriangle(Vector3 *position, Vector3 *velocity, Vector3 normal, float penetration) {
-    *position = Vector3Add(
+void resolveCollisionSphereTriangle(Vec3 *position, Vec3 *velocity, Vec3 normal, float penetration) {
+    *position = Vec3Add(
         *position,
-        Vector3Scale(normal, penetration));
+        Vec3Scale(normal, penetration));
 
     float vn =
-        Vector3DotProduct(*velocity, normal);
+        Vec3DotProduct(*velocity, normal);
 
     if(vn < 0.0f)
     {
-        *velocity = Vector3Subtract(
+        *velocity = Vec3Subtract(
             *velocity,
-            Vector3Scale(normal, vn));
+            Vec3Scale(normal, vn));
     }
 }
 
-void collideMeshSphereTriangles(Mesh mesh, Matrix transform, float radius, Vector3* position, Vector3* velocity) {
+void collideMeshSphereTriangles(Mesh mesh, Matrix transform, float radius, Vec3* position, Vec3* velocity) {
     for(int i = 0; i < mesh.triangleCount; i++)
     {
 		int i0, i1, i2;
@@ -270,27 +251,27 @@ void collideMeshSphereTriangles(Mesh mesh, Matrix transform, float radius, Vecto
 			i2 = i*3 + 2;
 		}
 
-        Vector3 a = {
+        Vec3 a = {
             mesh.vertices[i0*3+0],
             mesh.vertices[i0*3+1],
             mesh.vertices[i0*3+2]
         };
 
-        Vector3 b = {
+        Vec3 b = {
             mesh.vertices[i1*3+0],
             mesh.vertices[i1*3+1],
             mesh.vertices[i1*3+2]
         };
 
-        Vector3 c = {
+        Vec3 c = {
             mesh.vertices[i2*3+0],
             mesh.vertices[i2*3+1],
             mesh.vertices[i2*3+2]
         };
 
-        a = Vector3Transform(a, transform);
-        b = Vector3Transform(b, transform);
-        c = Vector3Transform(c, transform);
+        a = Vec3Transform(a, transform);
+        b = Vec3Transform(b, transform);
+        c = Vec3Transform(c, transform);
 
 		struct Triangle triangle = (struct Triangle){
 			a,
@@ -319,53 +300,53 @@ void collideMeshSphereTriangles(Mesh mesh, Matrix transform, float radius, Vecto
 struct BoxTriangleCollision getCollisionAABBTriangle(BoundingBox box, struct Triangle triangle) {
     struct BoxTriangleCollision btc = {0};
 
-    Vector3 center = {
+    Vec3 center = {
         (box.min.x + box.max.x) * 0.5f,
         (box.min.y + box.max.y) * 0.5f,
         (box.min.z + box.max.z) * 0.5f
     };
 
-    Vector3 closestTri =
+    Vec3 closestTri =
         getClosestPointTriangle(
             center,
             triangle
         );
 
-    Vector3 closestBox =
+    Vec3 closestBox =
         getClosestPointAABB(
             closestTri,
             box
         );
 
-    Vector3 diff =
-        Vector3Subtract(
+    Vec3 diff =
+        Vec3Subtract(
             closestBox,
             closestTri
         );
 
     float distSq =
-        Vector3LengthSqr(diff);
+        Vec3LengthSqr(diff);
 
     if(distSq > 1e-8f)
         return btc;
 
     btc.hit = true;
 
-    Vector3 ab =
-        Vector3Subtract(
+    Vec3 ab =
+        Vec3Subtract(
             triangle.b,
             triangle.a
         );
 
-    Vector3 ac =
-        Vector3Subtract(
+    Vec3 ac =
+        Vec3Subtract(
             triangle.c,
             triangle.a
         );
 
     btc.normal =
-        Vector3Normalize(
-            Vector3CrossProduct(ab, ac)
+        Vec3Normalize(
+            Vec3CrossProduct(ab, ac)
         );
 
     float px =
@@ -395,7 +376,7 @@ struct BoxTriangleCollision getCollisionAABBTriangle(BoundingBox box, struct Tri
     return btc;
 }
 
-void collideMeshAABBTriangles(Mesh mesh, Matrix transform, BoundingBox box, Vector3 *position, Vector3 *velocity) {
+void collideMeshAABBTriangles(Mesh mesh, Matrix transform, BoundingBox box, Vec3 *position, Vec3 *velocity) {
     for(int i = 0; i < mesh.triangleCount; i++)
     {
         int i0, i1, i2;
@@ -413,27 +394,27 @@ void collideMeshAABBTriangles(Mesh mesh, Matrix transform, BoundingBox box, Vect
             i2 = i*3 + 2;
         }
 
-        Vector3 a = {
+        Vec3 a = {
             mesh.vertices[i0*3 + 0],
             mesh.vertices[i0*3 + 1],
             mesh.vertices[i0*3 + 2]
         };
 
-        Vector3 b = {
+        Vec3 b = {
             mesh.vertices[i1*3 + 0],
             mesh.vertices[i1*3 + 1],
             mesh.vertices[i1*3 + 2]
         };
 
-        Vector3 c = {
+        Vec3 c = {
             mesh.vertices[i2*3 + 0],
             mesh.vertices[i2*3 + 1],
             mesh.vertices[i2*3 + 2]
         };
 
-        a = Vector3Transform(a, transform);
-        b = Vector3Transform(b, transform);
-        c = Vector3Transform(c, transform);
+        a = Vec3Transform(a, transform);
+        b = Vec3Transform(b, transform);
+        c = Vec3Transform(c, transform);
 
         struct Triangle triangle = {
             a,
@@ -456,18 +437,18 @@ void collideMeshAABBTriangles(Mesh mesh, Matrix transform, BoundingBox box, Vect
                 hit.penetration
             );
 
-            Vector3 correction =
-                Vector3Scale(
+            Vec3 correction =
+                Vec3Scale(
                     hit.normal,
                     hit.penetration
                 );
 
-            box.min = Vector3Add(
+            box.min = Vec3Add(
                 box.min,
                 correction
             );
 
-            box.max = Vector3Add(
+            box.max = Vec3Add(
                 box.max,
                 correction
             );
@@ -479,10 +460,10 @@ void collideMeshAABBTriangles(Mesh mesh, Matrix transform, BoundingBox box, Vect
 struct SphereTriangleCollision getCollisionCapsuleTriangleLQ(struct Capsule capsule, struct Triangle triangle) {
     struct SphereTriangleCollision ctc = {0};
 
-    Vector3 triCenter =
-        Vector3Scale(
-            Vector3Add(
-                Vector3Add(
+    Vec3 triCenter =
+        Vec3Scale(
+            Vec3Add(
+                Vec3Add(
                     triangle.a,
                     triangle.b
                 ),
@@ -491,7 +472,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleLQ(struct Capsule caps
             1.0f / 3.0f
         );
 
-    Vector3 sphereCenter =
+    Vec3 sphereCenter =
         getClosestPointSegment(
             triCenter,
             capsule.start,
@@ -513,7 +494,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleLQ(struct Capsule caps
     return ctc;
 }
 
-void collideMeshCapsuleTrianglesLQ(Mesh mesh, Matrix transform, struct Capsule capsule, Vector3 *position, Vector3 *velocity) {
+void collideMeshCapsuleTrianglesLQ(Mesh mesh, Matrix transform, struct Capsule capsule, Vec3 *position, Vec3 *velocity) {
     for(int i = 0; i < mesh.triangleCount; i++)
     {
         int i0, i1, i2;
@@ -531,27 +512,27 @@ void collideMeshCapsuleTrianglesLQ(Mesh mesh, Matrix transform, struct Capsule c
             i2 = i*3 + 2;
         }
 
-        Vector3 a = {
+        Vec3 a = {
             mesh.vertices[i0*3+0],
             mesh.vertices[i0*3+1],
             mesh.vertices[i0*3+2]
         };
 
-        Vector3 b = {
+        Vec3 b = {
             mesh.vertices[i1*3+0],
             mesh.vertices[i1*3+1],
             mesh.vertices[i1*3+2]
         };
 
-        Vector3 c = {
+        Vec3 c = {
             mesh.vertices[i2*3+0],
             mesh.vertices[i2*3+1],
             mesh.vertices[i2*3+2]
         };
 
-        a = Vector3Transform(a, transform);
-        b = Vector3Transform(b, transform);
-        c = Vector3Transform(c, transform);
+        a = Vec3Transform(a, transform);
+        b = Vec3Transform(b, transform);
+        c = Vec3Transform(c, transform);
 
         struct Triangle triangle = {
             a,
@@ -574,20 +555,20 @@ void collideMeshCapsuleTrianglesLQ(Mesh mesh, Matrix transform, struct Capsule c
                 hit.penetration
             );
 
-            Vector3 correction =
-                Vector3Scale(
+            Vec3 correction =
+                Vec3Scale(
                     hit.normal,
                     hit.penetration
                 );
 
             capsule.start =
-                Vector3Add(
+                Vec3Add(
                     capsule.start,
                     correction
                 );
 
             capsule.end =
-                Vector3Add(
+                Vec3Add(
                     capsule.end,
                     correction
                 );
@@ -598,22 +579,22 @@ void collideMeshCapsuleTrianglesLQ(Mesh mesh, Matrix transform, struct Capsule c
 struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule capsule, struct Triangle triangle) {
     struct SphereTriangleCollision result = {0};
 
-    Vector3 segA = capsule.start;
-    Vector3 segB = capsule.end;
+    Vec3 segA = capsule.start;
+    Vec3 segB = capsule.end;
 
-    Vector3 bestCapsule = {0};
-    Vector3 bestTriangle = {0};
+    Vec3 bestCapsule = {0};
+    Vec3 bestTriangle = {0};
 
     float bestDistSq = FLT_MAX;
 
-    Vector3 triClosest =
+    Vec3 triClosest =
         getClosestPointTriangle(
             segA,
             triangle
         );
 
     float distSq =
-        Vector3DistanceSqr(
+        Vec3DistanceSqr(
             segA,
             triClosest
         );
@@ -632,7 +613,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
         );
 
     distSq =
-        Vector3DistanceSqr(
+        Vec3DistanceSqr(
             segB,
             triClosest
         );
@@ -644,8 +625,8 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
         bestTriangle = triClosest;
     }
 
-    Vector3 c1;
-    Vector3 c2;
+    Vec3 c1;
+    Vec3 c2;
 
     getClosestPointsSegments(
         segA,
@@ -656,7 +637,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
         &c2
     );
 
-    distSq = Vector3DistanceSqr(c1, c2);
+    distSq = Vec3DistanceSqr(c1, c2);
 
     if(distSq < bestDistSq)
     {
@@ -674,7 +655,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
         &c2
     );
 
-    distSq = Vector3DistanceSqr(c1, c2);
+    distSq = Vec3DistanceSqr(c1, c2);
 
     if(distSq < bestDistSq)
     {
@@ -692,7 +673,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
         &c2
     );
 
-    distSq = Vector3DistanceSqr(c1, c2);
+    distSq = Vec3DistanceSqr(c1, c2);
 
     if(distSq < bestDistSq)
     {
@@ -710,7 +691,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
     result.hit = true;
 
     result.difference =
-        Vector3Subtract(
+        Vec3Subtract(
             bestCapsule,
             bestTriangle
         );
@@ -721,7 +702,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
     if(dist > 1e-6f)
     {
         result.normal =
-            Vector3Scale(
+            Vec3Scale(
                 result.difference,
                 1.0f/dist
             );
@@ -731,21 +712,21 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
     }
     else
     {
-        Vector3 ab =
-            Vector3Subtract(
+        Vec3 ab =
+            Vec3Subtract(
                 triangle.b,
                 triangle.a
             );
 
-        Vector3 ac =
-            Vector3Subtract(
+        Vec3 ac =
+            Vec3Subtract(
                 triangle.c,
                 triangle.a
             );
 
         result.normal =
-            Vector3Normalize(
-                Vector3CrossProduct(
+            Vec3Normalize(
+                Vec3CrossProduct(
                     ab,
                     ac
                 )
@@ -758,7 +739,7 @@ struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule caps
     return result;
 }
 
-void collideMeshCapsuleTrianglesHQ(Mesh mesh, Matrix transform, struct Capsule capsule, Vector3 *position, Vector3 *velocity) {
+void collideMeshCapsuleTrianglesHQ(Mesh mesh, Matrix transform, struct Capsule capsule, Vec3 *position, Vec3 *velocity) {
     for(int i = 0; i < mesh.triangleCount; i++)
     {
         int i0, i1, i2;
@@ -776,27 +757,27 @@ void collideMeshCapsuleTrianglesHQ(Mesh mesh, Matrix transform, struct Capsule c
             i2 = i*3 + 2;
         }
 
-        Vector3 a = {
+        Vec3 a = {
             mesh.vertices[i0*3+0],
             mesh.vertices[i0*3+1],
             mesh.vertices[i0*3+2]
         };
 
-        Vector3 b = {
+        Vec3 b = {
             mesh.vertices[i1*3+0],
             mesh.vertices[i1*3+1],
             mesh.vertices[i1*3+2]
         };
 
-        Vector3 c = {
+        Vec3 c = {
             mesh.vertices[i2*3+0],
             mesh.vertices[i2*3+1],
             mesh.vertices[i2*3+2]
         };
 
-        a = Vector3Transform(a, transform);
-        b = Vector3Transform(b, transform);
-        c = Vector3Transform(c, transform);
+        a = Vec3Transform(a, transform);
+        b = Vec3Transform(b, transform);
+        c = Vec3Transform(c, transform);
 
         struct Triangle triangle = {
             a,
@@ -819,20 +800,20 @@ void collideMeshCapsuleTrianglesHQ(Mesh mesh, Matrix transform, struct Capsule c
                 hit.penetration
             );
 
-            Vector3 correction =
-                Vector3Scale(
+            Vec3 correction =
+                Vec3Scale(
                     hit.normal,
                     hit.penetration
                 );
 
             capsule.start =
-                Vector3Add(
+                Vec3Add(
                     capsule.start,
                     correction
                 );
 
             capsule.end =
-                Vector3Add(
+                Vec3Add(
                     capsule.end,
                     correction
                 );
@@ -840,28 +821,28 @@ void collideMeshCapsuleTrianglesHQ(Mesh mesh, Matrix transform, struct Capsule c
     }
 }
 
-BoundingBox getSTAABB(Vector3 scale, Vector3 translation) {
-	Vector3 half = Vector3Scale(scale, 1/2.0f);
+BoundingBox getSTAABB(Vec3 scale, Vec3 translation) {
+	Vec3 half = Vec3Scale(scale, 1/2.0f);
 
 	BoundingBox box;
-	box.min = Vector3Add(Vector3Scale(half, -1.0f), translation);
-	box.max = Vector3Add(half, translation);
+	box.min = Vec3Add(Vec3Scale(half, -1.0f), translation);
+	box.max = Vec3Add(half, translation);
 
 	return box;
 }
 
-Vector3 getSAABB(BoundingBox box) {
-	return Vector3Subtract(box.max, box.min);
+Vec3 getSAABB(BoundingBox box) {
+	return Vec3Subtract(box.max, box.min);
 }
-Vector3 getTAABB(BoundingBox box) {
-	return Vector3Scale(
-		Vector3Add(box.min, box.max),
+Vec3 getTAABB(BoundingBox box) {
+	return Vec3Scale(
+		Vec3Add(box.min, box.max),
 		1.0f/2.0f
 	);
 }
 
-Vector3 getOverlapAABB(BoundingBox testBox, BoundingBox worldBox) {
-	return (Vector3){
+Vec3 getOverlapAABB(BoundingBox testBox, BoundingBox worldBox) {
+	return (Vec3){
 		fminf(testBox.max.x, worldBox.max.x) -
 		fmaxf(testBox.min.x, worldBox.min.x),
 		fminf(testBox.max.y, worldBox.max.y) -

@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 #include "Task.hpp"
-#include "../BumpAllocator.hpp"
+#include "../../core/BumpAllocator.hpp"
 
 namespace lvk {
 

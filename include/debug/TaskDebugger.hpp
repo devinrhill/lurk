@@ -4,10 +4,10 @@
 
 #include <raylib.h>
 #include <stdio.h>
-#include "../../util/Gui.hpp"
-#include "../Task.hpp"
-#include "../TaskSysCore.hpp"
-#include "TaskGuiWindow.hpp"
+#include "../util/Gui.hpp"
+#include "../task/core/Task.hpp"
+#include "../task/core/TaskSysCore.hpp"
+#include "../task/gui/TaskGuiWindow.hpp"
 
 namespace lvk {
 

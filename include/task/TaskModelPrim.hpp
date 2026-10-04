@@ -4,11 +4,11 @@
 
 #include <raylib.h>
 #include <raymath.h>
-#include "TaskStateMachine.hpp"
+#include "core/TaskState.hpp"
 
 namespace lvk {
 
-struct TaskModelPrim: TaskStateMachine {
+struct TaskModelPrim: TaskState {
 	enum PrimType: int {
 		P_CUBE = 1
 	};

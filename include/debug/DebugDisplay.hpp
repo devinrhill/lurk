@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cstring>
 #include <raylib.h>
-#include "geo/Vec2.hpp"
+#include "../geo/Vec2.hpp"
 
 namespace lvk {
 

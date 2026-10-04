@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "../Types.hpp"
+#include "../../core/Types.hpp"
 #include "Task.hpp"
 
 namespace lvk {
 
-class TaskStateMachine: public Task {
+class TaskState: public Task {
 public:
     enum Step {
         ENTER = 1,
@@ -52,13 +52,13 @@ public:
 	static constexpr uint STATE_COUNT = 8;
     State states[STATE_COUNT];
 
-	TaskStateMachine() {
-    	setName("TaskStateMachine");
+	TaskState() {
+    	setName("TaskState");
     	for(uint i = 0; i < STATE_COUNT; i++)
     		states[i] = {};
 	}
 
-	~TaskStateMachine() {
+	~TaskState() {
 	}
 };
 

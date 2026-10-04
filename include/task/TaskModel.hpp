@@ -5,7 +5,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
-#include "TaskStateMachine.hpp"
+#include "core/TaskState.hpp"
 #include "../geo/Vec3.hpp"
 #include "../anim/TexSrtAnim.hpp"
 
@@ -13,7 +13,7 @@ using namespace lvk::geo;
 
 namespace lvk {
 
-struct TaskModel: TaskStateMachine {
+struct TaskModel: TaskState {
     Vec3 position;
     Vec3 scale;
     Quaternion rotation;

@@ -4,7 +4,7 @@
 
 #include <raylib.h>
 #include <stdlib.h>
-#include "util/Collision.hpp"
+#include "../util/Collision.hpp"
 
 namespace lvk {
 

@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <raylib.h>
 #include <cmath>
-#include "../Math.hpp"
+#include "../core/Math.hpp"
 
 namespace lvk::util {
 

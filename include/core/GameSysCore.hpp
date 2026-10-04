@@ -4,8 +4,8 @@
 
 #include <cmath>
 #include <raylib.h>
-#include "io/Endianness.hpp"
-#include "MultipassOverlay.hpp"
+#include "../io/Endianness.hpp"
+#include "../render/MultipassOverlay.hpp"
 #include "PhysicsCtx.hpp"
 #include "ShaderCtx.hpp"
 #include "WindowCtx.hpp"

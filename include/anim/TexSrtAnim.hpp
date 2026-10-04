@@ -10,8 +10,8 @@
 #include "../io/BinaryIO.hpp"
 #include "../io/BinaryReader.hpp"
 #include "../io/Endianness.hpp"
-#include "../Math.hpp"
-#include "../GameSysCore.hpp"
+#include "../core/Math.hpp"
+#include "../core/GameSysCore.hpp"
 
 using namespace lvk::io;
 

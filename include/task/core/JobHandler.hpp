@@ -5,8 +5,8 @@
 #include "Job.hpp"
 #include <cstdint>
 #include <cstdlib>
-#include "../Types.hpp"
-#include "../util/Util.hpp"
+#include "../../core/Types.hpp"
+#include "../../util/Util.hpp"
 
 namespace lvk {
 

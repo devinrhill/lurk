@@ -5,8 +5,8 @@
 #define MULTIPASS_OVERLAY_CAPACITY 128
 
 #include <raylib.h>
-#include "WindowCtx.hpp"
-#include "geo/Vec2.hpp"
+#include "../core/WindowCtx.hpp"
+#include "../geo/Vec2.hpp"
 
 namespace lvk {
 

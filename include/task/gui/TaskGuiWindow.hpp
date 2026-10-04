@@ -4,7 +4,7 @@
 
 #include <raylib.h>
 #include <raymath.h>
-#include "../Task.hpp"
+#include "../core/Task.hpp"
 #include "TaskGui.hpp"
 
 // BUG: Window cannot be closed when minimized

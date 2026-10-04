@@ -3,7 +3,7 @@
 #pragma once
 
 #if 0
-#include <math.h>
+#include <cmath>
 #include "TaskGui.hpp"
 
 namespace lvk {

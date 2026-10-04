@@ -3,7 +3,7 @@
 #pragma once
 
 #include <raylib.h>
-#include "TaskModel.hpp"
+#include "../TaskModel.hpp"
 
 namespace lvk {
 

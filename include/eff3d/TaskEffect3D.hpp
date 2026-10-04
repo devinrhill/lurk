@@ -7,7 +7,7 @@
 #include "../io/BinaryReader.hpp"
 #include "../io/Endianness.hpp"
 #include "Emitter.hpp"
-#include "../task/Task.hpp"
+#include "../task/core/Task.hpp"
 
 using namespace lvk::io;
 

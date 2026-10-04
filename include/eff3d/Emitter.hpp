@@ -11,7 +11,7 @@
 #include <vector>
 #include "Particle.hpp"
 #include "Generator.hpp"
-#include "../GameSysCore.hpp"
+#include "../core/GameSysCore.hpp"
 
 namespace lvk::ef3 {
 

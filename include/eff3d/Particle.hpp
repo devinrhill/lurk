@@ -4,10 +4,10 @@
 
 #include <raylib.h>
 #include <raymath.h>
-#include "GeneratorConfig.hpp"
 #include <rlgl.h>
-#include "../Math.hpp"
-#include "../GameSysCore.hpp"
+#include "GeneratorConfig.hpp"
+#include "../core/Math.hpp"
+#include "../core/GameSysCore.hpp"
 #include "../util/Raylib.hpp"
 
 namespace lvk::ef3 {

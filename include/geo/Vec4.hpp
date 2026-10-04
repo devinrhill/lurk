@@ -7,7 +7,7 @@
 #include <raylib.h>
 #include <string>
 #include "Vec3.hpp"
-#include "../Math.hpp"
+#include "../core/Math.hpp"
 
 namespace lvk::geo {
 

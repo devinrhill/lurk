@@ -6,11 +6,10 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stddef.h>
-#include "Task.hpp"
-#include "../Math.hpp"
+#include "core/Task.hpp"
+#include "../core/Math.hpp"
 #include "../util/Raylib.hpp"
-#include "../GameSysCore.hpp"
-#include "../Math.hpp"
+#include "../core/GameSysCore.hpp"
 
 namespace lvk {
 

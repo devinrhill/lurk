@@ -4,10 +4,10 @@
 
 #include <cmath>
 #include <raylib.h>
-#include "../GameSysCore.hpp"
+#include "../core/GameSysCore.hpp"
+#include "../core/Math.hpp"
 #include "../geo/Vec3.hpp"
-#include "../Math.hpp"
-#include "../task/Task.hpp"
+#include "../task/core/Task.hpp"
 #include "../util/Raylib.hpp"
 
 using namespace lvk;

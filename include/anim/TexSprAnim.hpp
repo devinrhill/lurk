@@ -9,10 +9,9 @@
 #include "../io/BinaryReader.hpp"
 #include "../io/Endianness.hpp"
 #include "../util/Util.hpp"
-#include "../GameSysCore.hpp"
+#include "../core/GameSysCore.hpp"
 #include <raylib.h>
 #include <raymath.h>
-#include <vector>
 
 using namespace lvk::io;
 

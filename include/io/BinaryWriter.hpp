@@ -6,8 +6,8 @@
 #include <cstdio>
 #include "BinaryIO.hpp"
 #include "Endianness.hpp"
-#include "../GameSysCore.hpp"
-#include "../Types.hpp"
+#include "../core/GameSysCore.hpp"
+#include "../core/Types.hpp"
 #include "../util/Util.hpp"
 
 namespace lvk::io {

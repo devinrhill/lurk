@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "../GameSysCore.hpp"
+#include "../../core/GameSysCore.hpp"
 #include "TaskSysCore.hpp"
-#include "TaskStateMachine.hpp"
+#include "TaskState.hpp"
 
 namespace lvk {
 
-class TaskApp: public TaskStateMachine {
+class TaskApp: public TaskState {
 public:
     struct Stopwatch {
         long start;
@@ -19,7 +19,7 @@ public:
     bool isPaused;
     Stopwatch* stopwatches;
 
-	TaskApp(): TaskStateMachine() {
+	TaskApp(): TaskState() {
     	setName("TaskApp");
 
     	flags = 0;

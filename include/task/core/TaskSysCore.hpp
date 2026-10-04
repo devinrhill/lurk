@@ -5,7 +5,7 @@
 #include "Job.hpp"
 #include "JobHandler.hpp"
 #include "Task.hpp"
-#include "gui/TaskGui.hpp"
+#include "../gui/TaskGui.hpp"
 
 namespace lvk {
 
