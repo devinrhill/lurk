@@ -145,7 +145,7 @@ struct Particle {
 					pos,
 					up,
 					{scale.x, scale.z},
-					{0, 0},
+					{0.5, 0.5},
 					rotation,
 					color
 				);

@@ -422,4 +422,42 @@ Vec3 getGrabPoint(Vec3 position) {
 	return Vec3(0);
 }
 
+void fontDraw(Font font, const char* text, Vec2 position, float fontSize, float spacing, Color color) {
+	DrawTextEx(font, text, position.raylib(), fontSize, spacing, color);
+}
+
+// shadowStrength 0.0 .. 1.0
+void fontDrawShadow(Font font, const char* text, Vec2 position, float fontSize, float spacing, Color color, Vec2 shadowOffset, float shadowStrength) {
+	fontDraw(font, text, position + shadowOffset, fontSize, spacing, (Color){0, 0, 0, (unsigned char)(255.0f * shadowStrength)});
+	fontDraw(font, text, position, fontSize, spacing, color);
+}
+
+void drawPlaneWires(Vec3 position, Vec2 size, int divisions, Color color) {
+    float dx = size.x / divisions;
+    float dz = size.y / divisions;
+
+    float x0 = position.x - size.x * 0.5f;
+    float z0 = position.z - size.y * 0.5f;
+
+    for(int i = 0; i <= divisions; i++) {
+        float x = x0 + i * dx;
+
+        DrawLine3D(
+            {x, position.y, z0},
+            {x, position.y, z0 + size.y},
+            color
+        );
+    }
+
+    for(int i = 0; i <= divisions; i++) {
+        float z = z0 + i * dz;
+
+        DrawLine3D(
+            {x0, position.y, z},
+            {x0 + size.x, position.y, z},
+            color
+        );
+    }
+}
+
 } // namespace lvk::util
