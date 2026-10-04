@@ -1,29 +1,53 @@
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+// Devin Hill 2026
+
+#include <cstddef>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
 
 namespace util {
 
-inline int g__zero;
-inline int g__one;
-#define TMPS_CAPACITY 0x20
-inline uint64_t g__tmps[TMPS_CAPACITY];
+// temporary uint64_t's
+constexpr int TMPS_CAPACITY = 0x20;
+inline std::uint64_t g__tmps[TMPS_CAPACITY];
 
-#define TMPS_PGET(i) (&g__tmps[i])
-#define TMPS_GET(i) (g__tmps[i])
+inline std::uint64_t* tmpsPGet(int i) {
+	return &g__tmps[i];
+}
 
-#define TMPS_PSET(v, i) (g__tmps[(i)] = (v), &g__tmps[(i)])
-#define TMPS_SET(v, i) \
-	do { \
-		g__tmps[i] = v; \
-	} while(0)
+inline std::uint64_t tmpsGet(int i) {
+	return g__tmps[i];
+}
 
-#define ALIGN(x, a) (x + a - 1) / a * a;
-#define ALIGN_PERFECT(x, a) (x + a - 1) & ~(a - 1);
-static inline uint32_t alignNext(uint32_t x) {
+inline std::uint64_t* tmpsPSet(std::uint64_t v, int i) {
+	g__tmps[i] = v;
+	return &g__tmps[i];
+}
+
+inline std::uint64_t tmpsSet(std::uint64_t v, int i) {
+	g__tmps[i] = v;
+	return g__tmps[i];
+}
+
+// constants
+
+inline int g__zero = 0;
+inline int g__one = 1;
+inline float g__fOne = 1.0f;
+inline double g__dOne = 1.0;
+
+// bit stuff
+
+inline int align(int x, int a) {
+	return (x + a - 1) / a * a;
+}
+inline int alignPerfect(int x, int a) {
+	return (x + a - 1) & ~(a - 1);
+}
+
+inline std::uint32_t alignNext(std::uint32_t x) {
     if (x == 0) {
 		return 1;
 	} else {
@@ -32,30 +56,25 @@ static inline uint32_t alignNext(uint32_t x) {
 	}
 }
 
-#define FLAG_ON(flags, flag) (flags | flag)
-#define FLAG_OFF(flags, flag) (flags & ~flag)
+inline void flagOn(int& flags, int flag) {
+	flags |= flag;
+}
 
-void* zalloc(size_t size) {
-	void* ptr = malloc(size);
-	if(ptr == NULL) {
-		return NULL;
+inline void flagOff(int& flags, int flag) {
+	flags &= ~flag;
+}
+
+// memory alloc
+
+inline void* zalloc(std::size_t size) {
+	void* ptr = std::malloc(size);
+	if(ptr == nullptr) {
+		return nullptr;
 	}
 
-	memset(ptr, 0, size);
+	std::memset(ptr, 0, size);
 
 	return ptr;
 }
 
-// why would this be needed
-void* zrealloc(void* ptr, size_t size) {
-	ptr = realloc(ptr, size);
-	if(ptr == NULL) {
-		return NULL;
-	}
-
-	memset(ptr, 0, size);
-
-	return ptr;
-}
-
-}
+} // namespace util

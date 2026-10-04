@@ -26,8 +26,12 @@ public:
 	EventServer* server; // i barely know'er
 	
 	void broadcast(int port, int code, int flags) {
-		//
+		// flags
 
 		*server->accessCode(port) = code;
+	}
+
+	void subscribe(int port) {
+
 	}
 };

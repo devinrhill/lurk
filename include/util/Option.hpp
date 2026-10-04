@@ -1,16 +1,29 @@
 #pragma once
 
+// Devin Hill 2026
+
+namespace util {
+
 struct NullOpt_t {};
 inline constexpr NullOpt_t NullOpt{};
 
 template<class T>
 class Option {
 public:
-	Option(): Option(NullOpt) {}
+	Option():
+		Option(NullOpt)
+	{
+	}
 
-	Option(NullOpt_t): _value{}, _hasValue{false} {}
+	Option(NullOpt_t):
+		_value{},
+		_hasValue{false}
+	{
+	}
 
-	Option(T value): _value{value} {
+	Option(T value):
+		_value{value}
+	{
 		_hasValue = true;
 	}
 
@@ -45,3 +58,5 @@ protected:
 	T _value;
 	bool _hasValue;
 };
+
+} // namespace util

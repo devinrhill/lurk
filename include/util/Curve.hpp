@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdio>
 #include <raylib.h>
 #include <cmath>
 #include "Math.hpp"
@@ -7,35 +8,40 @@
 namespace util {
 
 enum CurveType {
-    C_CONSTANT = 0,
-    C_LINEAR = 1,
+	C_NONE = 0,
+    C_CONSTANT = 1,
+    C_LINEAR = 2,
 
-    C_EASE_IN_QUAD = 2,
-    C_EASE_OUT_QUAD = 3,
+    C_EASE_IN_QUAD = 3,
+    C_EASE_OUT_QUAD = 4,
 
-    C_SINE_IN_OUT = 4,
-    C_SINE_IN = 5,
-    C_SINE_OUT = 6,
+    C_SINE_IN_OUT = 5,
+    C_SINE_IN = 6,
+    C_SINE_OUT = 7,
 
-    C_COSINE_IN_OUT = 7,
-    C_COSINE_OUT = 8,
-    C_COSINE_IN = 9,
+    C_COSINE_IN_OUT = 8,
+    C_COSINE_OUT = 9,
+    C_COSINE_IN = 10,
 
-    C_COSINE_EASE_OUT = 10,
-    C_SINE_EASE_IN = 11,
-    C_SINE_EASE_OUT = 12,
-    C_COSINE_EASE_IN = 13,
+    C_COSINE_EASE_OUT = 11,
+    C_SINE_EASE_IN = 12,
+    C_SINE_EASE_OUT = 13,
+    C_COSINE_EASE_IN = 14,
 
-    C_SINE_IN_OUT_OVERSHOOT = 14,
-    C_SINE_IN_OVERSHOOT = 15,
-    C_SINE_OUT_OVERSHOOT = 16
+    C_SINE_IN_OUT_OVERSHOOT = 15,
+    C_SINE_IN_OVERSHOOT = 16,
+    C_SINE_OUT_OVERSHOOT = 17
 };
 
 float curve(int type, float start, float end, float rate) {
+	//printf("%d %f %f %f %f\n", type, scalar, start, end, rate);
     if (start == end)
         return start;
 
     switch (type) {
+    case CurveType::C_NONE:
+    	return start;
+
     case CurveType::C_CONSTANT:
         rate = 0.0f;
         break;
@@ -107,7 +113,7 @@ float curve(int type, float start, float end, float rate) {
         break;
     }
 
-    return start + (end - start) * rate;
+    return (start + (end - start) * rate);
 }
 
 }

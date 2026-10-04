@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <raylib.h>
@@ -8,9 +10,10 @@
 #include "../io/BinaryIO.hpp"
 #include "../io/BinaryReader.hpp"
 #include "../io/Endianness.hpp"
-#include "../util/Util.hpp"
-#include "../util/Math.hpp"
+#include "../Math.hpp"
 #include "../GameSysCore.hpp"
+
+namespace lvk {
 
 #define TEX_SRT_ANIM_CAPACITY 128
 
@@ -108,7 +111,7 @@ struct TexSrtAnim {
 		// advance to next frame
 		if(elapsedTime >= next->time) {
 			currentFrame = next;
-			currentFrameIndex = fwrapp(currentFrameIndex + 1, 0, keyframeCount-1);
+			currentFrameIndex = math::wrap<float>(currentFrameIndex + 1, 0, keyframeCount-1);
 			return;
 		}
 
@@ -118,7 +121,7 @@ struct TexSrtAnim {
 			return; // avoid divide by zero
 		}
 
-		float t = fclampp((elapsedTime - curr->time) / dur, 1.0f);
+		float t = math::clamp((elapsedTime - curr->time) / dur, 0.0f, 1.0f);
 
 		// update state
 		currentScale = Vector2Lerp(curr->scale, next->scale, t);	
@@ -235,3 +238,5 @@ struct TexSrtAnim {
 		return anim;
 	}
 };
+
+} // namespace lvk

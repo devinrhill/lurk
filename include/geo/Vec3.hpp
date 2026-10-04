@@ -1,11 +1,15 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cmath>
 #include <cstdio>
 #include <raylib.h>
 #include <string>
+#include "../Math.hpp"
+#include "Vec4.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class Vec3 {
 public:
@@ -247,6 +251,29 @@ public:
 	static Vec3 one() {
 		return Vec3(1.0f, 1.0f, 1.0f);
 	}
+
+	Vec4 to4() const {
+		return Vec4(x, y, z, 1.0f);
+	}
+
+	static bool nonZeroBasis(Vec3 v, Vec3 scale = Vec3(1.0), float epsilon = 0.001f) {
+		Vec3 v2 = v * scale;
+
+		return ((v2.x <= -epsilon || v2.y <= -epsilon || v2.z <= -epsilon) || (v2.x >= epsilon || v2.y >= epsilon || v2.z >= epsilon));
+	}
+
+	float comp() const {
+		return x * y * z;
+	}
+
+	float average() const {
+		float sum = x + y + z;
+		return sum / 3.0f;
+	}
+
+	bool isNormalized() const {
+		return math::eqel(x*x + y+y + z*z, 1.0f);
+	}
 };
 
-}
+} // namespace lvk::geo

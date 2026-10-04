@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdio>
-#include <cstring>
+#include <string>
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
@@ -58,6 +58,7 @@ struct Ptc3DGenConfig {
 	Vector2 randRotationRange;
 
 	int colorCurve;
+	float colorCurveScalar;
 	Color initColor;
 	Color finalColor;
 
@@ -91,7 +92,8 @@ struct Ptc3DGenConfig {
 		randOriginRange = Vector2Zero();
 		isRandRotation = false;
 		randRotationRange = Vector2Zero();
-		colorCurve = util::C_CONSTANT;
+		colorCurve = util::C_NONE;
+		colorCurveScalar = 1.0f;
 		initColor = WHITE;
 		finalColor = WHITE;
 		std::memset(texPath, 0, 0x100);

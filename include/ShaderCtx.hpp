@@ -1,6 +1,10 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <raylib.h>
+
+namespace lvk {
 
 struct ShaderCtx {
 	Shader texSrtAnim;
@@ -30,3 +34,5 @@ struct ShaderCtx {
 		UnloadShader(light);
 	}
 };
+
+} // namespace lvk

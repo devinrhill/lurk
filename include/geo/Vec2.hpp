@@ -1,11 +1,15 @@
+// Devin Hill 2026
+
 #pragma once
 
+#include <cassert>
 #include <cmath>
 #include <cstdio>
 #include <raylib.h>
 #include <string>
+#include "../Math.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class Vec2 {
 public:
@@ -13,8 +17,7 @@ public:
 	float y = 0.0f;
 
 	Vec2() {}
-
-	~Vec2() {}
+~Vec2() {}
 
 	Vec2(float x): x{x}, y{x} {}
 
@@ -233,6 +236,37 @@ public:
 	static Vec2 one() {
 		return Vec2(1.0f, 1.0f);
 	}
+
+	static Vec2 quadrant(int q) {
+		assert(q >= 1 && q <= 4 && "bad quadrant");
+
+		// accounting for -y for screens
+		switch(q) {
+		case 1:
+			return Vec2(1.0f, -1.0f);
+		case 2:
+			return Vec2(-1.0f, -1.0f);
+		case 3:
+			return Vec2(-1.0f, 1.0f);
+		case 4:
+			return Vec2(1.0f, 1.0f);
+		default:
+			return Vec2(0.0f);
+		}
+	}
+
+	float comp() const {
+		return x * y;
+	}
+
+	float average() const {
+		float sum = x + y;
+		return sum / 2.0f;
+	}
+
+	bool isNormalized() const {
+		return math::eqel(x*x + y+y, 1.0f);
+	}
 };
 
-}
+} // namespace lvk::geo

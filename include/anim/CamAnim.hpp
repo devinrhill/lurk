@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <raylib.h>
@@ -6,6 +8,8 @@
 #include "../util/Util.hpp"
 
 #define CAM_ANIM_CAPACITY 4096
+
+namespace lvk {
 
 enum CamAnimInterpolationType {
 	CAM_INT_LERP = 0,
@@ -209,3 +213,5 @@ struct CamAnim {
 
 	}
 };
+
+} // namespace lvk

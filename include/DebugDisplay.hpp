@@ -1,22 +1,26 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
 #include <raylib.h>
+#include "geo/Vec2.hpp"
+
+namespace lvk {
 
 struct DebugDisplay {
 public:
 	int stack;
-	Vector2 position;
+	geo::Vec2 position;
 	int fontSize;
 	Color color;
 	bool active;
 
 	DebugDisplay() {
 		stack = 0;
-		position.x = 10;
-		position.y = 30;
+		position = {10, 30};
 		fontSize = 20;
 		color = WHITE;
 		active = true;
@@ -44,3 +48,5 @@ public:
 		}
 	}
 };
+
+} // namespace lvk

@@ -41,6 +41,10 @@ struct TaskPtc3D: public Task {
 		return ptc;
 	}
 
+	void clear() {
+		emitters.clear();
+	}
+
 	void loadFile(const char* filename) {
 		BinaryReader br;
 
@@ -174,7 +178,14 @@ struct TaskPtc3D: public Task {
 				gen->config.randRotationRange.x = br.readInt<float>().valueOr();
 				gen->config.randRotationRange.y = br.readInt<float>().valueOr();
 
+				gen->config.color.r = br.readInt<uchar>().valueOr();
+				gen->config.color.g = br.readInt<uchar>().valueOr();
+				gen->config.color.b = br.readInt<uchar>().valueOr();
+				gen->config.color.a = br.readInt<uchar>().valueOr();
+
 				gen->config.colorCurve = br.readInt<uint>().valueOr();
+				gen->config.colorCurveScalar = br.readInt<float>().valueOr();
+				printf("scalar %f\n", gen->config.colorCurveScalar);
 
 				gen->config.initColor.r = br.readInt<uchar>().valueOr();
 				gen->config.initColor.g = br.readInt<uchar>().valueOr();

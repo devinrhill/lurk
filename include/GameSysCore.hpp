@@ -1,15 +1,16 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cmath>
 #include <raylib.h>
 #include "io/Endianness.hpp"
-#include "util/Util.hpp"
+#include "MultipassOverlay.hpp"
 #include "PhysicsCtx.hpp"
 #include "ShaderCtx.hpp"
 #include "WindowCtx.hpp"
-#include "MultipassOverlay.hpp"
 
-using namespace util;
+namespace lvk {
 
 struct GameSysCore {
 	struct WindowCtx wctx;
@@ -30,6 +31,8 @@ struct GameSysCore {
 	float elapsedTime;
 	int elapsedSeconds;
 	float dt;
+	geo::Vec2 mousePosition;
+	geo::Vec2 mouseDelta;
 	int targetFps;
 	int fps;
 	uint64_t ticks;
@@ -37,9 +40,7 @@ struct GameSysCore {
 	int endianness;
 
 	void init() {
-		endianness = getEndianness();
-		g__zero = 0;
-		g__one = 1;
+		endianness = io::getEndianness();
 		shctx.init();
 		pctx.init();
 		bgColor = BLACK;
@@ -57,7 +58,11 @@ struct GameSysCore {
 		elapsedSeconds = (int)floorf(elapsedTime);
 		dt = GetFrameTime();
 		ticks++;
+		mousePosition = GetMousePosition();
+		mouseDelta = GetMouseDelta();
 	}
 };
 
 inline GameSysCore GameCore;
+
+} // namespace lvk

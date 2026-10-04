@@ -80,6 +80,10 @@ struct Ptc3D {
 				}
 			}
 
+			if(genConfig->colorCurve != C_NONE) {
+				color = util::curveColor(genConfig->colorCurve, genConfig->initColor, genConfig->finalColor, elapsedNorm);
+			}
+
 			elapsed += GetFrameTime();
 			if(lifetime != 0.0f) {
 				elapsedNorm = fclampp(elapsed / lifetime, 1.0f);
@@ -89,8 +93,6 @@ struct Ptc3D {
 
 	void draw() {
 		if(isAlive()) {
-			color = util::curveColor(genConfig->colorCurve, genConfig->initColor, genConfig->finalColor, elapsedNorm);
-
 			if(flags & PT_DRAW_CUBE) {
 				DrawCubeV(pos, scale, color);
 			}

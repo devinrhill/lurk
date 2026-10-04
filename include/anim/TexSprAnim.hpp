@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstdlib>
@@ -11,6 +13,8 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
+
+namespace lvk {
 
 #define TEX_SPR_ANIM_CAPACITY 16
 
@@ -328,3 +332,5 @@ struct TexSprAnimManager {
 		return &anims[animCount-1];
 	}
 };
+
+} // namespace lvk

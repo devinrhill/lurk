@@ -1,7 +1,13 @@
+// Devin Hill 2026
+
 #pragma once
 
+#include <cstdio>
 #include <cstring>
 #include "Middle.hpp"
+#include "util/Util.hpp"
+
+namespace lvk {
 
 class BumpAllocator {
 public:
@@ -28,11 +34,6 @@ public:
 	void init(std::size_t size) {
 		this->size = size;
 		store = new byte[size];
-		if(store == nullptr) {
-			isValid = false;
-			isAlloc = false;
-			return;
-		}
 		isAlloc = true;
 
 		head = store;
@@ -57,12 +58,20 @@ public:
 	}
 
 	void* alloc(std::size_t size) {
-		if(head + size > tail) {
+		std::size_t travel = util::align(size, 8);
+		std::size_t waste = travel - size;
+#if 0
+		printf("bump alloc, req size: %lu, given size: %lu, wasted bytes: %lu\n", size, travel, waste);
+#endif
+
+		if(head + travel > tail) {
 			return nullptr;
 		}
 
-		head += size;
+		head += travel;
 
-		return (void*)(head - size);
+		return (void*)(head - travel);
 	}
 };
+
+} // namespace lvk

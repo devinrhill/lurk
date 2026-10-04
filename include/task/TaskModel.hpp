@@ -1,5 +1,4 @@
-#ifndef TASKMODEL_HPP
-#define TASKMODEL_HPP
+#pragma once
 
 #include <raylib.h>
 #include <raymath.h>
@@ -22,6 +21,12 @@ struct TaskModel: TaskStateMachine {
 
     bool visible;
     Model rModel;
+    ModelAnimation* rModelCha;
+    int chaCount;
+    uint chaIdx;
+    uint chaFrame;
+    bool hasCha;
+    bool loadModel;
 	bool disableBackface;
 
     TaskModel() {
@@ -37,29 +42,64 @@ struct TaskModel: TaskStateMachine {
         disableBackface = false;
         mtx = MatrixIdentity();
         hasSrt = false;
+        hasCha = false;
         doCalcMtx = true;
+        chaIdx = 0;
+        chaFrame = 0;
+        loadModel = false;
+        chaCount = 0;
+    }
+
+    ~TaskModel() {
+    	if(hasCha) {
+			UnloadModelAnimations(rModelCha, chaCount);
+		}
+		if(loadModel) {
+			UnloadModel(rModel);
+		}
     }
 
     void loadFile(const char* filename) {
         rModel = LoadModel(filename);
+        if(rModel.meshCount > 0) {
+			loadModel = true;
+        }
+
+        rModelCha = LoadModelAnimations(filename, &chaCount);
+        printf("yo\n");
+        if(chaCount > 0) {
+        	hasCha = true;
+        }
     }
 
     bool update(Task* param) override {
-        // update anims, shaders
+    	if(hasCha) {
+    		printf("cha\n");
+    		UpdateModelAnimation(rModel, rModelCha[chaIdx], (float)chaFrame);
+
+    		chaFrame++;
+
+    		if(chaFrame >= rModelCha[chaIdx].keyframeCount) {
+    			chaFrame = 0;
+    		}
+    	}
         if(hasSrt) {
 			srt.update();
         }
         if(doCalcMtx) {
 			calcMtx();
         }
+
         return true;
     }
 
     void calcMtx() {
+    	/*
 		mtx = MatrixIdentity();
 		mtx = MatrixMultiply(mtx, MatrixScale(scale.x, scale.y, scale.z));
 		mtx = MatrixMultiply(mtx, MatrixRotateXYZ(QuaternionToEuler(rotate)));
 		mtx = MatrixMultiply(mtx, MatrixTranslate(trans.x, trans.y, trans.z));
+		*/
     }
 
     void draw(int status, Task* param) override {
@@ -71,13 +111,15 @@ struct TaskModel: TaskStateMachine {
         	if(disableBackface) {
         		rlDisableBackfaceCulling();
         	}
+        	/*
         	rlPushMatrix();
         	rlMultMatrixf(MatrixToFloat(mtx));
 
 			rlColor4f(color.r, color.g, color.b, color.a);
+			*/
             DrawModelEx(rModel, trans.raylib(), Vector3Zero(), 0.0f, Vector3One(), WHITE);
 
-            rlPopMatrix();
+            //rlPopMatrix();
 
             if(disableBackface) {
             	rlEnableBackfaceCulling();
@@ -90,5 +132,3 @@ struct TaskModel: TaskStateMachine {
     	srt = anim;
     }
 };
-
-#endif // TASKMODEL_HPP

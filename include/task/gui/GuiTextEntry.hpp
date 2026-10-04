@@ -9,40 +9,52 @@ struct GuiTextEntry: TaskGui {
 	char buffer[0x100];
 	uint length;
 	bool complete;
+	bool active;
 
 	GuiTextEntry() {
 		setName("GuiTextEntry");
-		flags |= Task::Flags::PRE_UPDATE | Task::Flags::DRAW | Task::Flags::DRAW_2D;
+		flags |= PRE_UPDATE | DRAW;
+		drawFlags[MAIN] |= DRAW_2D;
+
 		memset(buffer, 0, 0x100);
 		length = 0;
 		complete = false;
+		active = false;
 	}
 
 	bool preUpdate(Task* param) {
-		int c = GetCharPressed();
-		while (c > 0) {
-			if (length < 0x100 - 1 &&
-				c >= 32 && c <= 126) {
-				buffer[length++] = (char)c;
-				buffer[length] = '\0';
+		if(active) {
+			int c = GetCharPressed();
+			while (c > 0) {
+				if (length < 0x100 - 1 &&
+					c >= 32 && c <= 126) {
+					buffer[length++] = (char)c;
+					buffer[length] = '\0';
+				}
+
+				c = GetCharPressed();
 			}
 
-			c = GetCharPressed();
-		}
+			if(IsKeyPressed(KEY_ENTER) && length > 0) {
+				complete = true;
+			}
 
-		if(IsKeyPressed(KEY_ENTER) && length > 0) {
-			complete = 1;
-		}
-
-		if (IsKeyPressed(KEY_BACKSPACE) && length > 0) {
-			buffer[--length] = '\0';
+			if (IsKeyPressed(KEY_BACKSPACE) && length > 0) {
+				buffer[--length] = '\0';
+			}
 		}
 
 		return true;
 	}
 
 	void draw(int status, Task* param) {
-		DrawText(buffer, 10, 10, 20, MAROON);
+		DrawText(buffer, trans.x, trans.y, fontSize, MAROON);
+	}
+
+	void clear() {
+		complete = 0;
+		length = 0;
+		std::memset(buffer, 0, 0x100);
 	}
 };
 

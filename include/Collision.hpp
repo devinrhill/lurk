@@ -1,8 +1,12 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <raylib.h>
 #include <stdlib.h>
 #include "util/Collision.hpp"
+
+namespace lvk {
 
 struct StaticAABBCollider {
 	BoundingBox aabb;
@@ -82,3 +86,5 @@ struct StaticAABBCollider SAABBFromST(Vector3 scale, Vector3 translation) {
 
 	return collider;
 }
+
+} // namespace lvk

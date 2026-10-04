@@ -4,88 +4,21 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
-#include "Geometry.hpp"
 #include "Math.hpp"
-#include "Raylib.hpp"
 #include "../GameSysCore.hpp"
 #include "Curve.hpp"
+#include "../geo/Vec3.hpp"
+
+using namespace geo;
 
 namespace util {
 
-struct IVector2 {
-	int x;
-	int y;
-};
-
 #define GET_VECTOR3_AXIS_MACRO(vec, axis) ((float*)&vec+axis)
-
-bool isAABB2D(struct AABB2D aabb, Vector2 pos) {
-	return ((pos.x > aabb.center.x - aabb.halfSize.x && pos.x < aabb.center.x + aabb.halfSize.x && pos.y > aabb.center.y - aabb.halfSize.y && pos.y < aabb.center.y + aabb.halfSize.y));
-}
-
-bool isAABB3D(struct AABB3D aabb, Vector3 pos) {
-	return ((pos.x > aabb.center.x - aabb.halfSize.x && pos.x < aabb.center.x + aabb.halfSize.x && pos.y > aabb.center.y - aabb.halfSize.y && pos.y < aabb.center.y + aabb.halfSize.y && pos.z > aabb.center.z - aabb.halfSize.z && pos.z < aabb.center.z + aabb.halfSize.z));
-}
 
 Color modAlpha(Color c, int alpha) {
     Color n = c;
     n.a = alpha;
     return n;
-}
-
-struct AABB2D aabb2D(Vector2 pos, Vector2 size) {
-	return (struct AABB2D){.center = {pos.x+size.x/2, pos.y+size.y/2}, .halfSize = {size.x/2, size.y/2}};
-}
-
-struct AABB3D aabb3D(Vector3 pos, Vector3 size) {
-	return (struct AABB3D){.center = {pos.x+size.x/2, pos.y+size.y/2, pos.z+size.z}, .halfSize = {size.x/2, size.y/2, size.z/2}};
-}
-
-Vector2 vector2Value(float v) {
-	return Vector2Scale(Vector2One(), v);
-}
-
-Vector3 vector3Value(float v) {
-	return Vector3Scale(Vector3One(), v);
-}
-
-Vector4 vector3To4(Vector3 v) {
-	return (Vector4){v.x, v.y, v.z, 1.0f};
-}
-
-Vector3 vector4To3(Vector4 v) {
-	return (Vector3){v.x, v.y, v.z};
-}
-
-struct IVector2 vector2Int(Vector2 vec) {
-	return (struct IVector2){
-		(int)vec.x,
-		(int)vec.y
-	};
-}
-
-bool vector3NotZeroBasis(Vector3 v, Vector3 scale, float epsilon) {
-	Vector3 v2 = Vector3Multiply(v, scale);
-
-	return ((v2.x <= -epsilon || v2.y <= -epsilon || v2.z <= -epsilon) || (v2.x >= epsilon || v2.y >= epsilon || v2.z >= epsilon));
-}
-
-float* getVector3AxisUnsafe(Vector3* vec, int axis) {
-	return ((float*)vec+axis);
-}
-
-float getVector3AxisSafe(Vector3 vec, int axis) {
-	float tmp[3] = {
-		vec.x,
-		vec.y,
-		vec.z
-	};
-
-	if(axis >= 0 && axis <= 2) {
-		return tmp[axis];
-	} else {
-		return 0.0f;
-	}
 }
 
 float projectRadiusOBB(struct OBB box, Vector2 axis) {
@@ -97,26 +30,6 @@ float projectRadiusOBB(struct OBB box, Vector2 axis) {
 
 	return box.halfSize.x * fabsf(Vector2DotProduct(axis, right)) +
 		box.halfSize.y * fabsf(Vector2DotProduct(axis, up));
-}
-
-float vector2CompProduct(Vector2 v) {
-	return v.x * v.y;
-}
-
-float vector3CompProduct(Vector3 v) {
-	return v.x * v.y * v.z;
-}
-
-float vector2Average(Vector2 v) {
-	float sum = v.x + v.y;
-
-	return sum / 2.0f;
-}
-
-float vector3Average(Vector3 v) {
-	float sum = v.x + v.y + v.z;
-
-	return sum / 3.0f;
 }
 
 float getYawFromDirection(Vector3 direction)
@@ -471,12 +384,40 @@ void drawGraph(Vector3 origin) {
 Color curveColor(int type, Color start, Color end, float rate) {
 	Color out = BLACK;
 
-	out.r = (int)(255.0f * curve(type, start.r / 255.0f, end.r / 255.0f, rate));
-	out.g = (int)(255.0f * curve(type, start.g / 255.0f, end.g / 255.0f, rate));
-	out.b = (int)(255.0f * curve(type, start.b / 255.0f, end.b / 255.0f, rate));
-	out.a = (int)(255.0f * curve(type, start.a / 255.0f, end.a / 255.0f, rate));
+	out.r = (unsigned char)(curve(type, start.r / 255.0f, end.r / 255.0f, rate) * 255.0f);
+	out.g = (unsigned char)(curve(type, start.g / 255.0f, end.g / 255.0f, rate) * 255.0f);
+	out.b = (unsigned char)(curve(type, start.b / 255.0f, end.b / 255.0f, rate) * 255.0f);
+	out.a = (unsigned char)(curve(type, start.a / 255.0f, end.a / 255.0f, rate) * 255.0f);
 
 	return out;
+}
+
+Vector3 getCamera3DUp(Camera3D camera) {
+	return Vector3Normalize(
+		Vector3CrossProduct(
+			getCamera3DRight(camera),
+			getCamera3DForward(camera)
+		)
+	);
+}
+
+Vec3 getGrabPoint(Vec3 position) {
+	Ray mouseRay = GetScreenToWorldRay(GetMousePosition(), GameCore.camera3d);
+	Vec3 rayOrigin = Vec3(mouseRay.position);
+	Vec3 rayDir = Vec3(mouseRay.direction);
+
+	Vec3 fwd = Vec3(getCamera3DForward(GameCore.camera3d));
+
+	float denom = rayDir.dot(fwd);
+
+	if(fabsf(denom) > 0.0001f) {
+		float t = (position - rayOrigin).dot(fwd) / denom;
+
+		Vec3 grabPoint = rayOrigin + rayDir * t;
+		return grabPoint;
+	}
+
+	return Vec3(0);
 }
 
 }

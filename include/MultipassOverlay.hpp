@@ -1,20 +1,20 @@
+// Devin Hill 2026
+
 #pragma once
 
 #define MULTIPASS_OVERLAY_CAPACITY 128
 
 #include <raylib.h>
-#include <cstdlib>
-#include "util/Util.hpp"
 #include "WindowCtx.hpp"
 #include "geo/Vec2.hpp"
 
-using namespace geo;
+namespace lvk {
 
 struct MultipassOverlay {
 	int shaderCount;
 	Shader** shaders;
 	bool isOwning;
-	Vec2 screenSize;
+	geo::Vec2 screenSize;
 
 	RenderTexture2D rt[2];
 	int rtUsing;
@@ -24,7 +24,7 @@ struct MultipassOverlay {
 		shaders = nullptr;
 		rtUsing = 0;
 		isOwning = false;
-		screenSize = Vec2(0);
+		screenSize = geo::Vec2(0.0f);
 	}
 
 	void init(WindowCtx wctx) {
@@ -32,7 +32,7 @@ struct MultipassOverlay {
 		for(uint i = 0; i < shaderCount; i++) {
 			shaders[i] = nullptr;
 		}
-		this->screenSize = Vec2(wctx.width, wctx.height);
+		this->screenSize = geo::Vec2(wctx.width, wctx.height);
 		rt[0] = LoadRenderTexture(screenSize.x, screenSize.y);
 		rt[1] = LoadRenderTexture(screenSize.x, screenSize.y);
 	}
@@ -95,3 +95,5 @@ struct MultipassOverlay {
 		EndDrawing();
 	}
 };
+
+} // namespace lvk

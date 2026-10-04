@@ -1,11 +1,15 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cmath>
 #include <cstdio>
 #include <raylib.h>
 #include <string>
+#include "Vec3.hpp"
+#include "../Math.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class Vec4 {
 public:
@@ -251,6 +255,23 @@ public:
 	static Vec4 one() {
 		return Vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	}
+
+	Vec3 to3() const {
+		return Vec3(x, y, z);
+	}
+
+	float comp() const {
+		return x * y * z * w;
+	}
+
+	float average() const {
+		float sum = x + y + z + w;
+		return sum / 4.0f;
+	}
+
+	bool isNormalized() const {
+		return math::eqel(x*x + y+y + z*z + w*w, 1.0f);
+	}
 };
 
-}
+} // namespace lvk::geo

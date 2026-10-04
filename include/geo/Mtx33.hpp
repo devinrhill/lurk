@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cmath>
@@ -5,7 +7,7 @@
 #include <string>
 #include "Vec3.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class Mtx33 {
 public:
@@ -343,4 +345,4 @@ public:
 	}
 };
 
-}
+} // namespace lvk::geo

@@ -1,12 +1,16 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstddef>
 #include <cstdio>
 #include "BinaryIO.hpp"
 #include "Endianness.hpp"
-#include "GameSysCore.hpp"
-#include "Middle.hpp"
-#include "util/Util.hpp"
+#include "../GameSysCore.hpp"
+#include "../Types.hpp"
+#include "../util/Util.hpp"
+
+namespace lvk::io {
 
 class BinaryWriter {
 public:
@@ -169,3 +173,5 @@ private:
 		}
 	}
 };
+
+} // namespace lvk::io

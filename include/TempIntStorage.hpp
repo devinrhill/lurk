@@ -1,30 +1,38 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstdio>
 #include <cstring>
+#include "Types.hpp"
 
-#define TIS_CAPACITY 4096
-enum TempIntStorageFlags {
-	// slot free flags
-	TISF_FREE = 0,
-	TISF_LOCKED = 1,
-};
+namespace lvk {
 
 struct TempIntStorage {
-	int slots[TIS_CAPACITY];
+	enum Flags {
+		TISF_FREE = 0,
+		TISF_LOCKED = 1,
+	};
+
+	static constexpr uint CAPACITY = 4096;
+
+	int slots[CAPACITY];
 	int capacity;
 	int size;
 
 	TempIntStorage() {
-		memset(slots, 0, TIS_CAPACITY);
+		memset(slots, 0, CAPACITY);
 	}
 
 	~TempIntStorage() {
 
 	}
 
-	int getFree(int slotNo) {
+	int nextFree(int slotNo) {
 		int out = 0;
+
+		for(uint i = 0; i < CAPACITY; i++) {
+		}
 
 		printf("slotNo: %d\n", slotNo);
 
@@ -36,3 +44,4 @@ struct TempIntStorage {
 	}
 };
 
+} // namespace lvk

@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cmath>
@@ -7,7 +9,7 @@
 
 #include "Vec3.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class AABB3D {
 public:
@@ -211,4 +213,4 @@ public:
 	}
 };
 
-}
+} // namespace lvk::geo

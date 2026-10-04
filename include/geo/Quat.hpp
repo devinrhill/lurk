@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cmath>
@@ -7,7 +9,7 @@
 #include "Vec3.hpp"
 #include "Mtx33.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class Quat {
 public:
@@ -335,4 +337,4 @@ public:
 	}
 };
 
-}
+} // namespace lvk::geo

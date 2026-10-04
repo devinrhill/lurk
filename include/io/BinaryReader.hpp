@@ -1,15 +1,27 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include "BinaryIO.hpp"
 #include "Endianness.hpp"
-#include "GameSysCore.hpp"
-#include "Middle.hpp"
-#include "util/Option.hpp"
+#include "../GameSysCore.hpp"
+#include "../Types.hpp"
+#include "../util/Option.hpp"
 
+namespace lvk::io {
+
+/**
+ * @brief Memory IO class for reading only
+ */
 class BinaryReader {
 public:
+	/**
+	 * @brief Constructs a new BinaryReader
+	 * @details Initializes member variables. Default target endianness is little-endian LSB.
+	 */
 	BinaryReader() {
 		buffer = nullptr;
 		size = 0;
@@ -25,6 +37,11 @@ public:
 		}
 	}
 
+	/**
+	 * @brief Loads data from file
+	 *
+	 * @param filename The name of the file to be loaded
+	 */
 	void loadFile(const char* filename) {
 		std::FILE* fp = std::fopen(filename, "rb");
 		if(fp == nullptr) {
@@ -45,6 +62,15 @@ public:
 		std::fclose(fp);
 	}
 
+	/**
+	 * @brief Read data from the internal buffer
+	 *
+	 * Reads `size` data from the internal buffer `count` times into the `ptr` output buffer.
+	 *
+	 * @param ptr The data output buffer
+	 * @param size The size in bytes of a single object to read
+	 * @param count The number of objects to read
+	 */
 	int read(void* ptr, std::size_t size, std::size_t count) {
 		uint readCount = 0;
 
@@ -65,6 +91,18 @@ public:
 		return readCount;
 	}
 
+	/**
+	 * @brief Read scalar values with respect to endianness
+	 *
+	 * Reads 
+	 *yeah it fuckin does
+	 *
+	 * @param endianness An optional parameter to use either the internal
+	 *					 target endianness or user-supplied endianness for
+	 *					 just this call. When `endianness` is -1, use
+	 *					 internal target endianness. When `endianness` != -1,
+	 *					 temporarily use `endianness`
+	 */
 	template<typename T>
 	Option<T> readInt(int endianness = -1) {
 		int endiannessSave = targetEndianness;
@@ -158,3 +196,5 @@ private:
 	int targetEndianness;
 	int hostEndianness;
 };
+
+} // namespace lvk::io

@@ -10,11 +10,11 @@
 
 struct TaskGuiWindow: public TaskGui {
     const char* title;
-    Vector2 ogScale;
+    Vec2 ogScale;
     bool drawWindowCtrl;
     bool drawWindowTitle;
-    Vector2 initDragTrans; // me every tuesday
-    Vector2 dragTrans;
+    Vec2 initDragTrans; // me every tuesday
+    Vec2 dragTrans;
 
     TaskGuiWindow(): TaskGui() {
         setName("TaskGuiWindow");
@@ -90,7 +90,7 @@ struct TaskGuiWindow: public TaskGui {
                 if(visible) {
                     if(!(persist & SHOULD_MOVE)) {
                         initDragTrans = GetMousePosition();
-                        dragTrans = Vector2Subtract(initDragTrans, trans);
+                        dragTrans = initDragTrans - trans;
                         //printf("%.1f %.1f %.1f %.1f\n", initDragTrans.x, initDragTrans.y, dragTrans.x, dragTrans.y);
                         persist |= SHOULD_MOVE;
                     }
@@ -109,7 +109,7 @@ struct TaskGuiWindow: public TaskGui {
                 if(!(persist & SHOULD_RESIZE) && !(persist & MINIMIZED)) {
                     if(lastPersist == persist) {
                         initDragTrans = GetMousePosition();
-                        dragTrans = Vector2Subtract(initDragTrans, trans);
+                        dragTrans = initDragTrans - trans;
                         persist |= SHOULD_RESIZE;
                     }
                 }
@@ -257,6 +257,12 @@ struct TaskGuiWindow: public TaskGui {
             DrawText(title, trans.x + scale.x - padding.x - MeasureText(title, fontSize), trans.y + padding.y, fontSize, WHITE);
             //DrawRectangleLines(trans.x, trans.y, scale.x, fontSize + padding.y, WHITE);
         }
+    }
+
+    Vec2 calcBegin() {
+    	Vec2 t = trans+margin;
+    	t.y += 20;
+    	return t;
     }
 };
 

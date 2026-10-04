@@ -7,7 +7,7 @@
 #include "Quat.hpp"
 #include "Vec4.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class Mtx44 {
 public:
@@ -568,4 +568,4 @@ public:
 	}
 };
 
-}
+} // namespace lvk::geo

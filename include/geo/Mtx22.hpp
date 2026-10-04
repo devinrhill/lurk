@@ -1,8 +1,10 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include "Vec2.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class Mtx22 {
 public:
@@ -232,4 +234,4 @@ public:
 	}
 };
 
-}
+} // namespace lvk::geo

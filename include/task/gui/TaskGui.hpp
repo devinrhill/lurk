@@ -3,7 +3,9 @@
 #include <raylib.h>
 #include "../../util/Gui.hpp"
 #include "../Task.hpp"
+#include "../../geo/Vec2.hpp"
 
+using namespace geo;
 using namespace util;
 
 class TaskGui: public Task {
@@ -57,16 +59,16 @@ public:
 
     bool visible;
 
-    Vector2 trans;
-    Vector2 scale;
+    Vec2 trans;
+    Vec2 scale;
 
-    Vector2 padding;
-    Vector2 margin;
+    Vec2 padding;
+    Vec2 margin;
 
     Color color ;
 
     bool hasBorder;
-    Vector2 border;
+    Vec2 border;
     Color borderColor;
 
     float fontSize;
@@ -151,7 +153,7 @@ public:
             state |= MOUSE;
         }
 
-        if(isAABB2D(aabb2D(trans, scale), GetMousePosition())) {
+        if(isAABB2D(aabb2D(trans.raylib(), scale.raylib()), GetMousePosition())) {
             if(GetKeyPressed() != 0) {
                 if(IsKeyPressed(KEY_ESCAPE)) {
                     state |= WANT_ESCAPE;

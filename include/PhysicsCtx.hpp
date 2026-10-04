@@ -1,4 +1,8 @@
+// Devin Hill 2026
+
 #pragma once
+
+namespace lvk {
 
 struct PhysicsCtx {
 	int fps;
@@ -32,3 +36,5 @@ struct PhysicsCtx {
 		pctx.time += pctx.step; \
 		pctx.accumulator -= pctx.step; \
 	}
+
+} // namespace lvk

@@ -6,7 +6,7 @@
 #include "Quat.hpp"
 #include "Mtx44.hpp"
 
-namespace geo {
+namespace lvk::geo {
 
 class Transform {
 public:
@@ -66,4 +66,4 @@ public:
 	}
 };
 
-}
+} // namespace lvk::geo
