@@ -1,15 +1,18 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <raylib.h>
 #include <raymath.h>
-#include "Ptc3DGenConfig.hpp"
+#include "GeneratorConfig.hpp"
 #include <rlgl.h>
-#include <GL/gl.h>
-#include "../util/Math.hpp"
+#include "../Math.hpp"
 #include "../GameSysCore.hpp"
 #include "../util/Raylib.hpp"
 
-struct Ptc3D {
+namespace lvk::ef3 {
+
+struct Particle {
 	enum Flags {
 		PT_INTEGRATE = 1<<0,
 
@@ -37,12 +40,12 @@ struct Ptc3D {
 	Color color;
 	Color debugColor;
 	Texture* texture;
-	Ptc3DGenConfig* genConfig;
+	GeneratorConfig* genConfig;
 	Vector3 force;
 	float mass;
 	float rotation;
 
-	Ptc3D() {
+	Particle() {
 		flags = 0;
 		pos = Vector3Zero();
 		scale = Vector3One();
@@ -68,10 +71,10 @@ struct Ptc3D {
 		if(isAlive()) {
 			if(flags & PT_INTEGRATE) {
 				Vector3 useAccel = accel;
-				useAccel = Vector3Scale(useAccel,mass*GetFrameTime());
+				useAccel = Vector3Scale(useAccel,mass*GameCore.dt);
 
-				vel = Vector3Add(vel, Vector3Scale(useAccel, GetFrameTime()));
-				pos = Vector3Add(pos, Vector3Scale(vel, GetFrameTime()));
+				vel = Vector3Add(vel, Vector3Scale(useAccel, GameCore.dt));
+				pos = Vector3Add(pos, Vector3Scale(vel, GameCore.dt));
 			}
 
 			if(flags & PT_SHRINK_SCALE_AGE) {
@@ -80,13 +83,13 @@ struct Ptc3D {
 				}
 			}
 
-			if(genConfig->colorCurve != C_NONE) {
+			if(genConfig->colorCurve != util::C_NONE) {
 				color = util::curveColor(genConfig->colorCurve, genConfig->initColor, genConfig->finalColor, elapsedNorm);
 			}
 
-			elapsed += GetFrameTime();
+			elapsed += GameCore.dt;
 			if(lifetime != 0.0f) {
-				elapsedNorm = fclampp(elapsed / lifetime, 1.0f);
+				elapsedNorm = math::clamp(elapsed / lifetime, 0.0f, 1.0f);
 			}
 		}
 	}
@@ -118,7 +121,7 @@ struct Ptc3D {
 					BeginShaderMode(GameCore.shctx.blackAlpha);
 				}
 
-				rlSetBlendFactors(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
+				//rlSetBlendFactors(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
 
 				Camera3D* camera = &GameCore.camera3d;
 
@@ -158,3 +161,5 @@ struct Ptc3D {
 		return elapsed < lifetime;
 	}
 };
+
+} // namespace lvk::ef3

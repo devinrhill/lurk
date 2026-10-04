@@ -13,6 +13,8 @@
 #include "../Math.hpp"
 #include "../GameSysCore.hpp"
 
+using namespace lvk::io;
+
 namespace lvk {
 
 #define TEX_SRT_ANIM_CAPACITY 128

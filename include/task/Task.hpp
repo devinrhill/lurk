@@ -1,10 +1,13 @@
-#ifndef TASK_HPP
-#define TASK_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #include <cmath>
 #include <cstdio>
-#include "../Middle.hpp"
+#include "../Types.hpp"
 #include "Node.hpp"
+
+namespace lvk {
 
 class Task : public Node {
 public:
@@ -330,4 +333,4 @@ public:
 	}
 };
 
-#endif // TASK_HPP
+} // namespace lvk

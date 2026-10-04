@@ -1,8 +1,12 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <raylib.h>
 #include <raymath.h>
 #include "TaskStateMachine.hpp"
+
+namespace lvk {
 
 struct TaskModelPrim: TaskStateMachine {
 	enum PrimType: int {
@@ -33,3 +37,5 @@ struct TaskModelPrim: TaskStateMachine {
         }
     }
 };
+
+} // namespace lvk

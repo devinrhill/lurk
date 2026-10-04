@@ -1,11 +1,13 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstdio>
 #include <raylib.h>
 #include <cmath>
-#include "Math.hpp"
+#include "../Math.hpp"
 
-namespace util {
+namespace lvk::util {
 
 enum CurveType {
 	C_NONE = 0,
@@ -99,7 +101,7 @@ float curve(int type, float start, float end, float rate) {
 
     case CurveType::C_SINE_IN_OUT_OVERSHOOT:
         rate = (2.0f * std::sin(rate * PI * 2.0f) + 1.0f) / 2.0f;
-        rate = util::fclamp(rate, 0.0f, 1.0f);
+        rate = math::clamp<float>(rate, 0.0f, 1.0f);
         break;
 
     case CurveType::C_SINE_IN_OVERSHOOT:
@@ -116,4 +118,4 @@ float curve(int type, float start, float end, float rate) {
     return (start + (end - start) * rate);
 }
 
-}
+} // namespace lvk::util

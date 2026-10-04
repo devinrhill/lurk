@@ -1,12 +1,15 @@
 #pragma once
 
 #include <raylib.h>
-#include "../../util/Gui.hpp"
-#include "../Task.hpp"
+#include "../../geo/AABB2D.hpp"
 #include "../../geo/Vec2.hpp"
+#include "../Task.hpp"
+#include "../../util/Gui.hpp"
 
-using namespace geo;
-using namespace util;
+using namespace lvk::geo;
+using namespace lvk::util;
+
+namespace lvk {
 
 class TaskGui: public Task {
 public:
@@ -153,7 +156,7 @@ public:
             state |= MOUSE;
         }
 
-        if(isAABB2D(aabb2D(trans.raylib(), scale.raylib()), GetMousePosition())) {
+        if(AABB2D::fromCenterHalfSize(trans, scale).contains(GetMousePosition())) {
             if(GetKeyPressed() != 0) {
                 if(IsKeyPressed(KEY_ESCAPE)) {
                     state |= WANT_ESCAPE;
@@ -212,3 +215,5 @@ public:
         return true;
     }
 };
+
+} // namespace lvk

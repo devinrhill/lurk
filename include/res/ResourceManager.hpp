@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include "ResEffect3DManager.hpp"
@@ -28,7 +30,7 @@ public:
 		return texMan[key];
 	}
 
-	TaskPtc3D* getREff3D(const std::string& key) {
+	ef3::TaskEffect3D* getREff3D(const std::string& key) {
 		return &eff3DMan[key]->effect3d();
 	}
 

@@ -1,8 +1,11 @@
-#ifndef TASKGUIERROR_HPP
-#define TASKGUIERROR_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #include "../../util/Raylib.hpp"
 #include "TaskGui.hpp"
+
+namespace lvk {
 
 struct TaskGuiError: public TaskGui {
     float duration;
@@ -33,7 +36,7 @@ struct TaskGuiError: public TaskGui {
         }
 
         if(alive) {
-            elapsed += GetFrameTime();
+            elapsed += GameCore.dt;
             alive = (elapsed < duration);
         }
 
@@ -50,4 +53,4 @@ struct TaskGuiError: public TaskGui {
     }
 };
 
-#endif // TASKGUIERROR_HPP
+} // namespace lvk

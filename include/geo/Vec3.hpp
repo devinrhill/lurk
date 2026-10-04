@@ -7,7 +7,7 @@
 #include <raylib.h>
 #include <string>
 #include "../Math.hpp"
-#include "Vec4.hpp"
+// #include "Vec4.hpp"
 
 namespace lvk::geo {
 
@@ -252,9 +252,11 @@ public:
 		return Vec3(1.0f, 1.0f, 1.0f);
 	}
 
+	/*
 	Vec4 to4() const {
 		return Vec4(x, y, z, 1.0f);
 	}
+	*/
 
 	static bool nonZeroBasis(Vec3 v, Vec3 scale = Vec3(1.0), float epsilon = 0.001f) {
 		Vec3 v2 = v * scale;

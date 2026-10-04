@@ -1,9 +1,12 @@
-#ifndef TASKGUIWARN_HPP
-#define TASKGUIWARN_HPP
+// Devin Hill 2026
 
-#include "util/Raylib.hpp"
-#include "task/gui/TaskGui.hpp"
-#include "task/gui/TaskGuiLabel.hpp"
+#pragma once
+
+#include "../../util/Raylib.hpp"
+#include "TaskGui.hpp"
+#include "TaskGuiLabel.hpp"
+
+namespace lvk {
 
 struct TaskGuiWarn: public TaskGuiLabel {
     bool animate;
@@ -35,7 +38,7 @@ struct TaskGuiWarn: public TaskGuiLabel {
             }
 
             if(alive) {
-                elapsed += GetFrameTime();
+                elapsed += GameCore.dt;
                 alive = (elapsed < duration);
             }
         }
@@ -53,4 +56,4 @@ struct TaskGuiWarn: public TaskGuiLabel {
     }
 };
 
-#endif // TASKGUIWARN_HPP
+} // namespace lvk

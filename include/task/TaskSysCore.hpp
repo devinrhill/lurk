@@ -1,10 +1,13 @@
-#ifndef TASKSYSCORE_HPP
-#define TASKSYSCORE_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #include "Job.hpp"
 #include "JobHandler.hpp"
 #include "Task.hpp"
 #include "gui/TaskGui.hpp"
+
+namespace lvk {
 
 class TaskSysCore {
 public:
@@ -149,4 +152,4 @@ public:
 
 inline TaskSysCore TaskCore;
 
-#endif // TASKSYSCORE_HPP
+} // namespace lvk

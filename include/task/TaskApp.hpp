@@ -1,9 +1,12 @@
-#ifndef TASKAPP_HPP
-#define TASKAPP_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #include "../GameSysCore.hpp"
 #include "TaskSysCore.hpp"
 #include "TaskStateMachine.hpp"
+
+namespace lvk {
 
 class TaskApp: public TaskStateMachine {
 public:
@@ -77,4 +80,4 @@ public:
 	void close() {}
 };
 
-#endif // TASKAPP_HPP
+} // namespace lvk

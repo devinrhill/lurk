@@ -1,5 +1,6 @@
-#ifndef TASKGUIWINDOW_HPP
-#define TASKGUIWINDOW_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #include <raylib.h>
 #include <raymath.h>
@@ -7,6 +8,8 @@
 #include "TaskGui.hpp"
 
 // BUG: Window cannot be closed when minimized
+
+namespace lvk {
 
 struct TaskGuiWindow: public TaskGui {
     const char* title;
@@ -266,4 +269,4 @@ struct TaskGuiWindow: public TaskGui {
     }
 };
 
-#endif // TASKGUIWINDOW_HPP
+} // namespace lvk

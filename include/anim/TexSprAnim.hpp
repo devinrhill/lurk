@@ -14,6 +14,8 @@
 #include <raymath.h>
 #include <vector>
 
+using namespace lvk::io;
+
 namespace lvk {
 
 #define TEX_SPR_ANIM_CAPACITY 16
@@ -173,7 +175,7 @@ struct TexSprAnim {
 
 		br.seek(frameInfoOff, O_SET);
 
-		frameInfo = (TexSprAnimFrameInfo*)zalloc(sizeof(struct TexSprAnimFrameInfo) * frameCount);
+		frameInfo = (TexSprAnimFrameInfo*)util::zalloc(sizeof(struct TexSprAnimFrameInfo) * frameCount);
 		for(int i = 0; i < frameCount; i++) {
 			int nameOff = br.readInt<uint>().valueOr();
 			frameInfo[i].length = br.readInt<float>().valueOr();
@@ -181,20 +183,20 @@ struct TexSprAnim {
 			int seekback = br.tell();
 			br.seek(nameOff, O_SET);
 			int nameLen = br.readInt<uint>().valueOr();
-			frameInfo[i].name = (char*)zalloc(nameLen+1);
+			frameInfo[i].name = (char*)util::zalloc(nameLen+1);
 			br.read(frameInfo[i].name, nameLen, 1);
 			br.seek(seekback, O_SET);
 		}
 
 		br.seek(masterNameOff, O_SET);
 		int masterNameLen = br.readInt<uint>().valueOr();
-		name = (char*)zalloc(masterNameLen+1);
+		name = (char*)util::zalloc(masterNameLen+1);
 		br.read(name, masterNameLen, 1);
 		ownsName = 1;
 
 		br.seek(texturePathOff, O_SET);
 		int texturePathLen = br.readInt<uint>().valueOr();
-		texturePath = (char*)zalloc(texturePathLen+1);
+		texturePath = (char*)util::zalloc(texturePathLen+1);
 		br.read(texturePath, texturePathLen, 1);
 		ownsTexturePath = 1;
 

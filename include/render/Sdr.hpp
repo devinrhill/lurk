@@ -4,9 +4,8 @@
 
 namespace lvk {
 
-struct Job {
-	void (*init)();
-	void (*close)();
+class Sdr {
+
 };
 
 } // namespace lvk

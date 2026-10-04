@@ -1,26 +1,32 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstdio>
 #include <vector>
 #include "../io/BinaryReader.hpp"
 #include "../io/Endianness.hpp"
-#include "../ptc3d/Ptc3DEmi.hpp"
-#include "Task.hpp"
+#include "Emitter.hpp"
+#include "../task/Task.hpp"
 
-struct TaskPtc3D: public Task {
+using namespace lvk::io;
+
+namespace lvk::ef3 {
+
+struct TaskEffect3D: public Task {
 	// 1
 	static constexpr uint VERSION = 2;
 
-	std::vector<Ptc3DEmi*> emitters;
+	std::vector<Emitter*> emitters;
 
-	TaskPtc3D() {
-		setName("TaskPtc3D");
+	TaskEffect3D() {
+		setName("TaskEffect3D");
 		flags |= UPDATE | DRAW;
 		drawFlags[MAIN] |= DRAW_3D;
 	}
 
 	bool update(Task* param) override {
-		for(Ptc3DEmi* e: emitters) {
+		for(Emitter* e: emitters) {
 			e->update();
 		}
 
@@ -28,17 +34,17 @@ struct TaskPtc3D: public Task {
 	}
 
 	void draw(int status, Task* param) override {
-		for(Ptc3DEmi* e: emitters) {
+		for(Emitter* e: emitters) {
 			e->draw();
 		}
 	}
 
-	static TaskPtc3D create(const char* filename) {
-		TaskPtc3D ptc;
+	static TaskEffect3D create(const char* filename) {
+		TaskEffect3D eff;
 
-		ptc.loadFile(filename);
+		eff.loadFile(filename);
 
-		return ptc;
+		return eff;
 	}
 
 	void clear() {
@@ -83,7 +89,7 @@ struct TaskPtc3D: public Task {
 		uint emitterCount = br.readInt<uint>().valueOr();
 
 		for(uint i = 0; i < emitterCount; i++) {
-			Ptc3DEmi* emi = new Ptc3DEmi;
+			Emitter* emi = new Emitter;
 
 			char emiMagic[4];
 			br.read(emiMagic, 4, 1);
@@ -101,7 +107,7 @@ struct TaskPtc3D: public Task {
 			br.seek(8, O_CUR);
 
 			for(uint j = 0; j < emi->genCount; j++) {
-				Ptc3DGen* gen = new Ptc3DGen;
+				Generator* gen = new Generator;
 
 				char genMagic[4];
 				br.read(genMagic, 1, 4);
@@ -217,3 +223,5 @@ struct TaskPtc3D: public Task {
 
 	}
 };
+
+} // namespace lvk::ef3

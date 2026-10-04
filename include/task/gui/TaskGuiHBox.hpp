@@ -1,9 +1,12 @@
-#ifndef TASKGUIHBOX_HPP
-#define TASKGUIHBOX_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #if 0
 #include <math.h>
 #include "TaskGui.hpp"
+
+namespace lvk {
 
 struct TaskGuiHBox: public TaskGui {
     TaskGui childRoot;
@@ -91,6 +94,7 @@ struct TaskGuiHBox: public TaskGui {
         task->parent = this;
     }
 };
-#endif
 
-#endif // TASKGUIHBOX_HPP
+} // namespace lvk
+
+#endif

@@ -1,17 +1,20 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <math.h>
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
-#include "Math.hpp"
+#include "../Math.hpp"
 #include "../GameSysCore.hpp"
 #include "Curve.hpp"
+#include "../geo/OBB.hpp"
 #include "../geo/Vec3.hpp"
 
-using namespace geo;
+using namespace lvk::geo;
 
-namespace util {
+namespace lvk::util {
 
 #define GET_VECTOR3_AXIS_MACRO(vec, axis) ((float*)&vec+axis)
 
@@ -32,18 +35,15 @@ float projectRadiusOBB(struct OBB box, Vector2 axis) {
 		box.halfSize.y * fabsf(Vector2DotProduct(axis, up));
 }
 
-float getYawFromDirection(Vector3 direction)
-{
+float getYawFromDirection(Vector3 direction) {
     return atan2f(direction.x, -direction.z);
 }
 
-float getPitchFromDirection(Vector3 direction)
-{
+float getPitchFromDirection(Vector3 direction) {
     return asinf(direction.y);
 }
 
-Vector3 getRotationForward(float pitch, float yaw)
-{
+Vector3 getRotationForward(float pitch, float yaw) {
     return (Vector3){
         sinf(yaw) * cosf(pitch),
         -sinf(pitch),
@@ -97,6 +97,7 @@ void camera3DRotateEuler(Camera3D* cam, Vector3 rotation) {
 }
 
 void drawCamera3D(Vector3 position, Vector3 rotation, Vector3 scale, Color color, int drawLine) {
+	/*
 	rlPushMatrix();
 		Quaternion rot = QuaternionFromEuler(rotation.x, -rotation.y, rotation.z);
 
@@ -144,6 +145,7 @@ void drawCamera3D(Vector3 position, Vector3 rotation, Vector3 scale, Color color
 			)
 		), WHITE);
 	}
+	*/
 }
 
 void drawCrosshair(Vector2 origin, int extent, Color color) {
@@ -169,10 +171,10 @@ void drawAxes3D(float extent, float scale) {
 
 	Vector3 fullBasis;
 	Vector3 zero = Vector3Zero();
-	Vector3 boxScale = vector3Value(0.15f);
+	Vector3 boxScale = {0.15f, 0.15f, 0.15f};
 
 	for(int i = 0; i < 3; i++) {
-		fullBasis = Vector3Multiply(vector3Value(extent), basisVectors[i]);
+		fullBasis = Vector3Multiply({extent, extent, extent}, basisVectors[i]);
 
 		Vector3 forward = Vector3Normalize(fullBasis);
 		Vector3 ref = (Vector3){0,1,0};
@@ -262,11 +264,11 @@ void drawGrid2DCenter(int x, int y, int width, int height, int spacing, int draw
 }
 
 int isVec2Normalized(Vector2 v) {
-	return feqel(v.x*v.x + v.y*v.y, 1.0f);
+	return math::eqel(v.x*v.x + v.y*v.y, 1.0f);
 }
 
 int isVec3Normalized(Vector3 v) {
-	return feqel(v.x*v.x + v.y*v.y + v.z*v.z, 1.0f);
+	return math::eqel(v.x*v.x + v.y*v.y + v.z*v.z, 1.0f);
 }
 
 float getRandomFloat(float min, float max) {
@@ -420,4 +422,4 @@ Vec3 getGrabPoint(Vec3 position) {
 	return Vec3(0);
 }
 
-}
+} // namespace lvk::util

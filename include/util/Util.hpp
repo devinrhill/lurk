@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 
-namespace util {
+namespace lvk::util {
 
 // temporary uint64_t's
 constexpr int TMPS_CAPACITY = 0x20;
@@ -77,4 +77,4 @@ inline void* zalloc(std::size_t size) {
 	return ptr;
 }
 
-} // namespace util
+} // namespace lvk::util

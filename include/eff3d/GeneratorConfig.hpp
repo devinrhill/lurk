@@ -1,13 +1,17 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstdio>
-#include <string>
+#include <cstring>
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
 #include "../util/Curve.hpp"
 
-struct Ptc3DGenConfig {
+namespace lvk::ef3 {
+
+struct GeneratorConfig {
 	enum Flags {
 		PG_RAND_VEC_SET = 1<<0,
 		PG_RAND_VEC_ADD = 1<<1,
@@ -64,7 +68,7 @@ struct Ptc3DGenConfig {
 
 	char texPath[0x100];
 
-	Ptc3DGenConfig() {
+	GeneratorConfig() {
 		ptcFlags = 0;
 		burstCount = 0;
 		pos = Vector3Zero();
@@ -178,3 +182,4 @@ struct Ptc3DGenConfig {
 	}
 };
 
+} // namespace lvk::ef3

@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <raylib.h>
@@ -7,12 +9,14 @@
 #include "../geo/Vec3.hpp"
 #include "../anim/TexSrtAnim.hpp"
 
-using namespace geo;
+using namespace lvk::geo;
+
+namespace lvk {
 
 struct TaskModel: TaskStateMachine {
-    Vec3 trans;
+    Vec3 position;
     Vec3 scale;
-    Quaternion rotate;
+    Quaternion rotation;
     Matrix mtx;
     Color color;
     bool doCalcMtx;
@@ -34,7 +38,7 @@ struct TaskModel: TaskStateMachine {
         flags |= UPDATE | DRAW;
         drawFlags[MAIN] |= DRAW_3D;
 
-		trans = Vec3(0);
+		position = Vec3(0);
 		scale = Vec3(1);
 		color = WHITE;
         visible = true;
@@ -117,7 +121,7 @@ struct TaskModel: TaskStateMachine {
 
 			rlColor4f(color.r, color.g, color.b, color.a);
 			*/
-            DrawModelEx(rModel, trans.raylib(), Vector3Zero(), 0.0f, Vector3One(), WHITE);
+            DrawModelEx(rModel, position.raylib(), Vector3Zero(), 0.0f, Vector3One(), WHITE);
 
             //rlPopMatrix();
 
@@ -132,3 +136,5 @@ struct TaskModel: TaskStateMachine {
     	srt = anim;
     }
 };
+
+} // namespace lvk

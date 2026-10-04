@@ -25,7 +25,7 @@ struct PhysicsCtx {
 };
 
 #define PHYS_BEGIN(pctx) \
-	pctx.dt = GetFrameTime(); \
+	pctx.dt = GameCore.dt; \
 	if(pctx.dt > 0.25) { \
 		pctx.dt = 0.25; \
 	} \

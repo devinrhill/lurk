@@ -1,62 +1,66 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstdio>
 #include <raylib.h>
 #include <raymath.h>
 #include "../util/Raylib.hpp"
-#include "Ptc3D.hpp"
-#include "Ptc3DGenConfig.hpp"
+#include "Particle.hpp"
+#include "GeneratorConfig.hpp"
 
-void randProc(Vector2 range, int flags, Vector3* dest, Ptc3DGenConfig conf) {
+namespace lvk::ef3 {
+
+void randProc(Vector2 range, int flags, Vector3* dest, GeneratorConfig conf) {
 	Vector3 newv = Vector3Zero();
-	if(flags & Ptc3DGenConfig::Flags::PG_RAND_SPHERE_DIST) {
+	if(flags & GeneratorConfig::Flags::PG_RAND_SPHERE_DIST) {
 		newv = Vector3Scale(
-			getRandomSphereDir(),
-			getRandomFloat(range.x, range.y)
+			util::getRandomSphereDir(),
+			util::getRandomFloat(range.x, range.y)
 		);
-	} else if (flags & Ptc3DGenConfig::Flags::PG_RAND_CUBE_DIST) {
+	} else if (flags & GeneratorConfig::Flags::PG_RAND_CUBE_DIST) {
 		newv = {
-			getRandomFloat(range.x, range.y),
-			getRandomFloat(range.x, range.y),
-			getRandomFloat(range.x, range.y)
+			util::getRandomFloat(range.x, range.y),
+			util::getRandomFloat(range.x, range.y),
+			util::getRandomFloat(range.x, range.y)
 		};
 	}
 
-	if(flags & Ptc3DGenConfig::Flags::PG_RAND_UNIFORM) {
+	if(flags & GeneratorConfig::Flags::PG_RAND_UNIFORM) {
 		newv.y = newv.x;
 		newv.z = newv.x;
 	}
 
 	Vector3 modv = *dest;
 
-	if(flags & Ptc3DGenConfig::Flags::PG_RAND_VEC_ADD) {
+	if(flags & GeneratorConfig::Flags::PG_RAND_VEC_ADD) {
 		modv = Vector3Add(modv, newv);
-	} else if(flags & Ptc3DGenConfig::Flags::PG_RAND_VEC_SET) {
+	} else if(flags & GeneratorConfig::Flags::PG_RAND_VEC_SET) {
 		modv = newv;
-	} else if(flags & Ptc3DGenConfig::Flags::PG_RAND_VEC_MULT) {
+	} else if(flags & GeneratorConfig::Flags::PG_RAND_VEC_MULT) {
 		modv = Vector3Multiply(modv, newv);
 	}
 
-	if(flags & Ptc3DGenConfig::Flags::PG_RAND_VEC_X) {
+	if(flags & GeneratorConfig::Flags::PG_RAND_VEC_X) {
 		dest->x = modv.x;
 	}
-	if(flags & Ptc3DGenConfig::Flags::PG_RAND_VEC_Y) {
+	if(flags & GeneratorConfig::Flags::PG_RAND_VEC_Y) {
 		dest->y = modv.y;
 	}
-	if(flags & Ptc3DGenConfig::Flags::PG_RAND_VEC_Z) {
+	if(flags & GeneratorConfig::Flags::PG_RAND_VEC_Z) {
 		dest->z = modv.z;
 	}
 }
 
-struct Ptc3DGen {
-	Ptc3DGenConfig config;
+struct Generator {
+	GeneratorConfig config;
 	Texture texture;
 	bool active;
 	float randOriginElapsed;
 	bool randOrigin;
 	Vector3 initOrigin;
 
-	Ptc3DGen() {
+	Generator() {
 		//config = {};
 		//texture = {};
 		active = false;
@@ -67,7 +71,7 @@ struct Ptc3DGen {
 
 	void print() {
     	printf("PtcGenerator3D {\n");
-    	printf("    config: <Ptc3DGenConfig>\n");
+    	printf("    config: <GeneratorConfig>\n");
     	printf("    texture: %p\n", (void*)&texture);
     	printf("    active: %s\n", active ? "true" : "false");
     	printf("}\n");
@@ -81,7 +85,7 @@ struct Ptc3DGen {
 
 	void update() {
 		if(config.isRandOrigin) {
-			randOriginElapsed += GetFrameTime();
+			randOriginElapsed += GameCore.dt;
 
 			if(randOriginElapsed > config.randOriginInterval) {
 				randOriginElapsed = 0.0f;
@@ -91,7 +95,7 @@ struct Ptc3DGen {
 		}
 	}
 
-	void generate(Ptc3D* ptc) {
+	void generate(Particle* ptc) {
 		ptc->elapsed = ptc->elapsedNorm = 0.0f;
 		ptc->pos = Vector3Add(
 			config.origin,
@@ -135,7 +139,7 @@ struct Ptc3DGen {
 		);
 
 		if(config.isRandRotation) {
-			ptc->rotation = getRandomFloat(config.randRotationRange.x, config.randRotationRange.y);
+			ptc->rotation = util::getRandomFloat(config.randRotationRange.x, config.randRotationRange.y);
 		}
 	}
 
@@ -158,3 +162,4 @@ struct Ptc3DGen {
 	}
 };
 
+} // namespace lvk::ef3

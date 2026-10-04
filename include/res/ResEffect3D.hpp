@@ -1,23 +1,26 @@
+// Devin Hill 2026
+
 #pragma once
 
-#include "../task/TaskPtc3D.hpp"
+#include "../eff3d/TaskEffect3D.hpp"
 
 namespace lvk::res {
 
 class ResEffect3D {
 public:
 	ResEffect3D() {
-
+		isLoaded = false;
+		rEff3d = {};
 	}
 
 	void loadFile(const char* filename) {
 		if(!isLoaded) {
-			rPtc3d.loadFile(filename);
+			rEff3d.loadFile(filename);
 		}
 	}
 
-	TaskPtc3D& effect3d() {
-		return rPtc3d;
+	ef3::TaskEffect3D& effect3d() {
+		return rEff3d;;
 	}
 
 	bool loaded() const {
@@ -26,7 +29,7 @@ public:
 
 private:
 	bool isLoaded;
-	TaskPtc3D rPtc3d;
+	ef3::TaskEffect3D rEff3d;
 };
 
 }

@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <raylib.h>
@@ -6,6 +8,8 @@
 #include "../Task.hpp"
 #include "../TaskSysCore.hpp"
 #include "TaskGuiWindow.hpp"
+
+namespace lvk {
 
 struct TaskDebugger: public TaskGuiWindow {
     struct TaskInfo {
@@ -178,3 +182,5 @@ struct TaskDebugger: public TaskGuiWindow {
         }
     }
 };
+
+} // namespace lvk

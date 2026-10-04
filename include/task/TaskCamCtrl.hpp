@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <math.h>
@@ -5,9 +7,12 @@
 #include <raymath.h>
 #include <stddef.h>
 #include "Task.hpp"
-#include "../util/Math.hpp"
+#include "../Math.hpp"
 #include "../util/Raylib.hpp"
 #include "../GameSysCore.hpp"
+#include "../Math.hpp"
+
+namespace lvk {
 
 enum CamCtrlFlags {
 	CCF_UPDATE_POS = 1 << 0,
@@ -91,19 +96,19 @@ public:
 				rotation.z -= speed * GameCore.dt;
 			}
 
-			cam->up = getCameraRoll(*cam, rotation.z);
+			cam->up = util::getCameraRoll(*cam, rotation.z);
 		}
 		if(camFlags & CCF_FORWARD) {
 			if(IsKeyDown(KEY_W)) {
 				dir = Vector3Add(
 					dir,
-					getRotationForward(rotation.x, rotation.y)
+					util::getRotationForward(rotation.x, rotation.y)
 				);
 			}
 			if(IsKeyDown(KEY_S)) {
 				dir = Vector3Subtract(
 					dir,
-					getRotationForward(rotation.x, rotation.y)
+					util::getRotationForward(rotation.x, rotation.y)
 				);
 			}
 		}
@@ -112,7 +117,7 @@ public:
 				dir = Vector3Add(
 					dir,
 					Vector3CrossProduct(
-						getRotationForward(rotation.x, rotation.y),
+						util::getRotationForward(rotation.x, rotation.y),
 						cam->up
 					)
 				);
@@ -121,7 +126,7 @@ public:
 				dir = Vector3Subtract(
 					dir,
 					Vector3CrossProduct(
-						getRotationForward(rotation.x, rotation.y),
+						util::getRotationForward(rotation.x, rotation.y),
 						cam->up
 					)
 				);
@@ -150,8 +155,7 @@ public:
 			cam->position = Vector3Add(
 				cam->position,
 				Vector3Scale(
-					Vector3Scale(
-						dir,
+					Vector3Scale( dir,
 						GameCore.dt
 					),
 					speed
@@ -159,15 +163,17 @@ public:
 			);
 		}
 		if(camFlags & CCF_UPDATE_EULER_ROT) {
-			camera3DRotateEuler(cam, rotation);
+			util::camera3DRotateEuler(cam, rotation);
 		}
 		if(camFlags & CCF_WRAP_ANGLES) {
-			pfwrap(&angle, 0.0f, 2.0f * M_PI);
-			pfclamp(&rotation.x, -pitchLimit, pitchLimit);
-			pfwrap(&rotation.y, 0.0f, 2.0f * M_PI);
-			pfwrap(&rotation.z, 0.0f, 2.0f * M_PI);
+			angle = math::warp<float>(angle, 0.0f, 2.0f * M_PI);
+			rotation.x = math::clamp<float>(rotation.x, -pitchLimit, pitchLimit);
+			rotation.y = math::wrap<float>(rotation.y, 0.0f, 2.0f * M_PI);
+			rotation.z = math::wrap<float>(rotation.z, 0.0f, 2.0f * M_PI);
 		}
 
 		return true;
 	}
 };
+
+} // namespace lvk

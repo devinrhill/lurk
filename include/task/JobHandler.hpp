@@ -1,11 +1,14 @@
-#ifndef JOB_HANDLER_HPP
-#define JOB_HANDLER_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #include "Job.hpp"
 #include <cstdint>
 #include <cstdlib>
-#include "../Middle.hpp"
+#include "../Types.hpp"
 #include "../util/Util.hpp"
+
+namespace lvk {
 
 struct JobHandler {
 	bool force;
@@ -38,7 +41,7 @@ struct JobHandler {
 		this->mask = mask;
 		this->shift = shift;
 		this->jobCount = jobCount;
-		this->jobs = (Job*)zalloc(jobCount * sizeof(Job));
+		this->jobs = (Job*)util::zalloc(jobCount * sizeof(Job));
 		memcpy(this->jobs, jobs, jobCount * sizeof(Job));
 	}
 
@@ -101,4 +104,4 @@ struct JobHandler {
 	}
 };
 
-#endif // JOB_HANDLER_HPP
+} // namespace lvk

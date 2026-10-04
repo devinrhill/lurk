@@ -104,13 +104,13 @@ public:
 	 *					 temporarily use `endianness`
 	 */
 	template<typename T>
-	Option<T> readInt(int endianness = -1) {
+	util::Option<T> readInt(int endianness = -1) {
 		int endiannessSave = targetEndianness;
 		if(endianness != -1) {
 			targetEndianness = endianness;
 		}
 
-		Option<T> out = NullOpt;
+		util::Option<T> out = util::NullOpt;
 		T value;
 		int result = read(&value, sizeof(T), 1);
 		if(result == sizeof(T)) {

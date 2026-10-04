@@ -9,7 +9,7 @@ namespace lvk::geo {
 struct OBB {
 	Vec2 center;
 	Vec2 halfSize;
-	float rotate;
+	float rotation;
 };
 
 } // namespace lvk::geo

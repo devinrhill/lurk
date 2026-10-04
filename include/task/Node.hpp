@@ -1,8 +1,12 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <cstring>
 #include <cstdio>
-#include "../Middle.hpp"
+#include "../Types.hpp"
+
+namespace lvk {
 
 class Node {
 public:
@@ -228,3 +232,5 @@ public:
 		return count;
 	}
 };
+
+} // namespace lvk

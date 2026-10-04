@@ -1,3 +1,5 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <algorithm>
@@ -7,12 +9,14 @@
 #include <raymath.h>
 #include <rlgl.h>
 #include <vector>
-#include "Ptc3D.hpp"
-#include "Ptc3DGen.hpp"
+#include "Particle.hpp"
+#include "Generator.hpp"
 #include "../GameSysCore.hpp"
 
-struct Ptc3DEmi {
-	struct Ptc3DSortBuffer {
+namespace lvk::ef3 {
+
+struct Emitter {
+	struct ParticleSortBuffer {
 		uint index;
 		float distSq;
 		float depth;
@@ -27,14 +31,14 @@ struct Ptc3DEmi {
 	int ptcCount;
 	int genCount;
 	int flags;
-	Ptc3D* ptcs;
-	std::vector<Ptc3DGen*> gens;
+	Particle* ptcs;
+	std::vector<Generator*> gens;
 	float spawnRate;
 	float elapsed;
 	float age;
 	float delay;
 	int sortCount;
-	Ptc3DSortBuffer* sortBuffer;
+	ParticleSortBuffer* sortBuffer;
 	int highestNextFree;
 	int lastHighestNextFree;
 	bool doSort;
@@ -59,7 +63,7 @@ struct Ptc3DEmi {
     	}
 	}
 
-	Ptc3DEmi() {
+	Emitter() {
 		highestNextFree = 0;
 		ptcs = nullptr;
 		sortBuffer = nullptr;
@@ -72,7 +76,7 @@ struct Ptc3DEmi {
 		doSort = true;
 	}
 
-	~Ptc3DEmi() {
+	~Emitter() {
 		if(sortBuffer != nullptr) {
 			delete[] sortBuffer;
 			sortBuffer = nullptr;
@@ -85,11 +89,11 @@ struct Ptc3DEmi {
 	}
 
 	void init() {
-		sortBuffer = new Ptc3DSortBuffer[ptcCount];
-		std::memset(sortBuffer, 0, sizeof(Ptc3DSortBuffer) * ptcCount);
+		sortBuffer = new ParticleSortBuffer[ptcCount];
+		std::memset(sortBuffer, 0, sizeof(ParticleSortBuffer) * ptcCount);
 
-		ptcs = new Ptc3D[ptcCount];
-		std::memset(ptcs, 0, sizeof(Ptc3D) * ptcCount);
+		ptcs = new Particle[ptcCount];
+		std::memset(ptcs, 0, sizeof(Particle) * ptcCount);
 	}
 
 	void gen() {
@@ -137,10 +141,10 @@ struct Ptc3DEmi {
 				ptcs[i].update();
 			}
 
-			elapsed += GetFrameTime();
+			elapsed += GameCore.dt;
 		}
 
-		age += GetFrameTime();
+		age += GameCore.dt;
 	}
 
 	void draw() {
@@ -157,7 +161,7 @@ struct Ptc3DEmi {
 				float halfWidth = ptcs[i].scale.x * 0.5f;
 
 				Vector3 d = Vector3Subtract(ptcs[i].pos, cam->position);
-				float depth = Vector3DotProduct(d, getCamera3DForward(*cam));
+				float depth = Vector3DotProduct(d, util::getCamera3DForward(*cam));
 
 				float depthRadius = halfWidth;
 				sortBuffer[sortCount++] = {
@@ -171,7 +175,7 @@ struct Ptc3DEmi {
 		if(doSort) {
 			std::sort(sortBuffer,
 				sortBuffer + sortCount,
-				[](const Ptc3DSortBuffer& a, const Ptc3DSortBuffer& b) {
+				[](const ParticleSortBuffer& a, const ParticleSortBuffer& b) {
 					return a.depth > b.depth;
 				}
 			);
@@ -211,3 +215,5 @@ struct Ptc3DEmi {
 		return age > delay;
 	}
 };
+
+} // namespace lvk::ef3

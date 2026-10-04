@@ -1,8 +1,11 @@
-#ifndef TASKSTATEMACHINE_HPP
-#define TASKSTATEMACHINE_HPP
+// Devin Hill 2026
 
-#include "../Middle.hpp"
+#pragma once
+
+#include "../Types.hpp"
 #include "Task.hpp"
+
+namespace lvk {
 
 class TaskStateMachine: public Task {
 public:
@@ -59,4 +62,4 @@ public:
 	}
 };
 
-#endif // TASKSTATEMACHINE_HPP
+} // namespace lvk

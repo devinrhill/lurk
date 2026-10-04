@@ -1,10 +1,10 @@
-#pragma once
-
 // Devin Hill 2026
+
+#pragma once
 
 #include <cmath>
 
-namespace util {
+namespace lvk::util {
 
 float stepSmooth1(float t) {
 	return t * t * (3.0f - 2.0f * t);
@@ -42,4 +42,4 @@ float fhermite(float p0, float m0, float p1, float m1, float t) {
 	return h00*p0 + h10*m0 + h01*p1 + h11*m1;
 }
 
-} // namespace util
+} // namespace lvk::util

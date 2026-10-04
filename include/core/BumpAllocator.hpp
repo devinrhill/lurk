@@ -4,7 +4,7 @@
 
 #include <cstdio>
 #include <cstring>
-#include "Middle.hpp"
+#include "Types.hpp"
 #include "util/Util.hpp"
 
 namespace lvk {
@@ -58,7 +58,7 @@ public:
 	}
 
 	void* alloc(std::size_t size) {
-		std::size_t travel = util::align(size, 8);
+		std::size_t travel = util::align(size, sizeof(void*));
 		std::size_t waste = travel - size;
 #if 0
 		printf("bump alloc, req size: %lu, given size: %lu, wasted bytes: %lu\n", size, travel, waste);

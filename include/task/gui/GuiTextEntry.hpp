@@ -1,9 +1,12 @@
-#ifndef GUITEXTENTRY_HPP
-#define GUITEXTENTRY_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #include <raylib.h>
-#include "../../Middle.hpp"
+#include "../../Types.hpp"
 #include "TaskGui.hpp"
+
+namespace lvk {
 
 struct GuiTextEntry: TaskGui {
 	char buffer[0x100];
@@ -58,4 +61,4 @@ struct GuiTextEntry: TaskGui {
 	}
 };
 
-#endif // GUITEXTENTRY_HPP
+} // namespace lvk

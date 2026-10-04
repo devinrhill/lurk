@@ -1,9 +1,13 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <map>
 #include <vector>
 #include "Task.hpp"
 #include "../BumpAllocator.hpp"
+
+namespace lvk {
 
 struct EventServer {
 	BumpAllocator store;
@@ -35,3 +39,5 @@ public:
 
 	}
 };
+
+} // namespace lvk

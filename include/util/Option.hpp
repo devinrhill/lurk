@@ -1,8 +1,8 @@
-#pragma once
-
 // Devin Hill 2026
 
-namespace util {
+#pragma once
+
+namespace lvk::util {
 
 struct NullOpt_t {};
 inline constexpr NullOpt_t NullOpt{};
@@ -59,4 +59,4 @@ protected:
 	bool _hasValue;
 };
 
-} // namespace util
+} // namespace lvk::util

@@ -1,12 +1,16 @@
+// Devin Hill 2026
+
 #pragma once
 
 #include <float.h>
 #include <raylib.h>
 #include <raymath.h>
 #include <stddef.h>
-#include "Geometry.hpp"
+#include "../geo/Triangle.hpp"
 
-namespace util {
+using namespace lvk::geo;
+
+namespace lvk::util {
 
 struct SphereTriangleCollision {
 	Vector3 difference;
@@ -20,35 +24,6 @@ struct BoxTriangleCollision {
     float penetration;
     bool hit;
 };
-
-// get closest
-Vector3 getClosestPointTriangleVec(Vector3 p, Vector3 a, Vector3 b, Vector3 c);
-Vector3 getClosestPointTriangle(Vector3 p, struct Triangle triangle);
-Vector3 getClosestPointAABB(Vector3 p, BoundingBox box);
-Vector3 getClosestPointSegment(Vector3 p, Vector3 a, Vector3 b);
-void getClosestPointsSegments(Vector3 p1, Vector3 q1, Vector3 p2, Vector3 q2, Vector3 *c1, Vector3 *c2);
-
-// sphere vs triangle
-struct SphereTriangleCollision getCollisionSphereTriangle(Vector3 sphereCenter, float radius, struct Triangle triangle);
-void resolveCollisionSphereTriangle(Vector3 *position, Vector3 *velocity, Vector3 normal, float penetration);
-void collideMeshSphereTriangles(Mesh mesh, Matrix transform, float radius, Vector3* position, Vector3* velocity);
-
-// aabb vs triangle
-struct BoxTriangleCollision getCollisionAABBTriangle(BoundingBox box, struct Triangle triangle);
-void collideMeshAABBTriangles(Mesh mesh, Matrix transform, BoundingBox box, Vector3 *position, Vector3 *velocity);
-
-// capsule vs triangle low quality
-struct SphereTriangleCollision getCollisionCapsuleTriangleLQ(struct Capsule capsule, struct Triangle triangle);
-void collideMeshCapsuleTrianglesLQ(Mesh mesh, Matrix transform, struct Capsule capsule, Vector3 *position, Vector3 *velocity);
-// capsule vs triangle high quality
-struct SphereTriangleCollision getCollisionCapsuleTriangleHQ(struct Capsule capsule, struct Triangle triangle);
-void collideMeshCapsuleTrianglesHQ(Mesh mesh, Matrix transform, struct Capsule capsule, Vector3 *position, Vector3 *velocity);
-
-// aabb helpers
-BoundingBox getSTAABB(Vector3 scale, Vector3 translation);
-Vector3 getSAABB(BoundingBox box);
-Vector3 getTAABB(BoundingBox box);
-Vector3 getOverlapAABB(BoundingBox testBox, BoundingBox worldBox);
 
 Vector3 getClosestPointTriangleVec(Vector3 p, Vector3 a, Vector3 b, Vector3 c) {
     Vector3 ab = Vector3Subtract(b, a);
@@ -896,4 +871,4 @@ Vector3 getOverlapAABB(BoundingBox testBox, BoundingBox worldBox) {
 	};
 }
 
-}
+} // namespace lvk::util

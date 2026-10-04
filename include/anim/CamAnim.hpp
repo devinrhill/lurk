@@ -65,7 +65,7 @@ struct CamAnim {
 
 	CamAnim() {
 		keyframeCount = 0;
-		keyframes = (CamAnimKeyframe*)zalloc(sizeof(struct CamAnimKeyframe) * CAM_ANIM_CAPACITY);
+		keyframes = (CamAnimKeyframe*)util::zalloc(sizeof(struct CamAnimKeyframe) * CAM_ANIM_CAPACITY);
 		elapsed = 0.0f;
 		fps = 60;
 		currFrame = NULL;
@@ -94,7 +94,7 @@ struct CamAnim {
 			return;
 		}
 
-		elapsed += GetFrameTime() * fps;
+		elapsed += GameCore.dt * fps;
 
 		struct CamAnimKeyframe* curr = currFrame;
 		struct CamAnimKeyframe* next = curr->next;

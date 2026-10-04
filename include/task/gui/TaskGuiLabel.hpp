@@ -1,8 +1,11 @@
-#ifndef TASKLABEL_HPP
-#define TASKLABEL_HPP
+// Devin Hill 2026
+
+#pragma once
 
 #include <raylib.h>
 #include "TaskGui.hpp"
+
+namespace lvk {
 
 struct TaskGuiLabel: TaskGui {
     const char* text;
@@ -34,4 +37,4 @@ struct TaskGuiLabel: TaskGui {
     }
 };
 
-#endif // TASKLABEL_HPP
+} // namespace lvk
